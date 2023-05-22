@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.Accounts;
+import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.LoginForm;
 import com.example.bankingbackend.Entity.PasswordRequest;
 import com.example.bankingbackend.Entity.UserInfo;
 import com.example.bankingbackend.repository.AccountsRepository;
+import com.example.bankingbackend.repository.DebitRepository;
 import com.example.bankingbackend.repository.UserInfoRepository;
 @CrossOrigin("*")
 
@@ -23,17 +25,36 @@ public class RegistrationController {
 	@Autowired
 	private UserInfoRepository UserInfoRepository;
 
+	@Autowired
+	private DebitRepository DebitRepository;
     private final EmailSenderService emailService;
     
     String customeridref;
     public RegistrationController(EmailSenderService emailService) {
         this.emailService = emailService;
     }
+    @PostMapping("/api/accountnocheck")
+    public boolean accNoCheck(@RequestBody String accountNo) {
+    	Optional<Accounts> custid = AccountsRepository.findByCustomerId(accountNo);
+    	System.out.println(accountNo);
+    	if (custid == null)
+    		return false;
+    	return true;
+    	}
+  //applying for a new card
+    @PostMapping("/api/applydebitcard")
+    public void saveDebit(@RequestBody Debit debit) {
+//    	System.out.println(debit.getCvv());
+//    	System.out.println(debit.getFirstName());
+//    	System.out.println(debit.getValidFrom());
+    	DebitRepository.save(debit);
+    }
+    
     @PostMapping("/api/password")
     public boolean updatePassword( @RequestBody PasswordRequest password) {
       UserInfo user = UserInfoRepository.findByCustomerId(customeridref).orElse(null);
-      System.out.println(customeridref);
-      System.out.println(" "+password.getPassword());
+//      System.out.println(customeridref);
+//      System.out.println(" "+password.getPassword());
       if (user == null) {
         return false;
       }

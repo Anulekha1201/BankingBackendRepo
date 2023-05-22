@@ -1,6 +1,6 @@
 package com.example.bankingbackend.Entity;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,148 +12,151 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "debit")
 public class Debit {
-
-	@Column(name = "cardNo")
-	private long cardNum;
-	
 	@Id
-	@Column(name = "customerId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
-	private long accountNo;
-	private long Pin;
+	@Column(name = "cvv")
+	private Long cvv;
+	@Column(name = "account_no")
+	private Long accountNo;
 	
-	public Debit(long accountNo, long Pin) {
-		super();
-		this.accountNo = accountNo;
-		this.Pin = Pin;
-	}
+	@Column(name = "card_no")
+	private long cardNo;
+	@Column(name = "customer_id")
+	private String customerId;
+	
+	
+	@Column(name = "email_id")
+	private String emailId;
 
-	public long getAccountNo() {
-		return accountNo;
-	}
-
-	public void setAccountNo(long accountNo) {
-		this.accountNo = accountNo;
-	}
-
-	public long getPin() {
-		return Pin;
-	}
-
-	public void setPin(long Pin) {
-		this.Pin = Pin;
-	}
-
-	//@Column(name = "first_name")
+	@Column(name = "first_name")
 	private String firstName;
-	
-	//@Column(name = "last_name")
+	@Column(name = "last_name")
 	private String lastName;
 	
-	@Column(name = "emailId")
-	private String mail;
+	@Column(name = "mobile_no")
+	private Long mobileNumber;
 	
-	@Column(name = "mobileNumber")
-	private int num;
+	@Column(name = "valid_From")
+	private String validFrom;
 	
-	@Column(name = "CVV")
-	private int cvv;
+	@Column(name = "valid_Upto")
+	private String validUpto;
 	
-	@Column(name = "validFrom")
-	private static LocalDate validFrom;
-	
-	@Column(name = "validUpto")
-	private LocalDate validUpto;
-	
-	public Debit() {}
+	public Debit() {
 
-	public Debit(long cardNum, long id, String firstName, String lastName, String mail, int num, int cvv, LocalDate validFrom,
-			LocalDate validUpto) {
+	}
+
+	public Debit(Long cvv, Long accountNo, long cardNo, String customerId, String emailId, String firstName,
+			String lastName, Long mobileNumber, String validFrom, String validUpto) {
 		super();
-		this.cardNum = cardNum;
-		this.id = id;
+		this.cvv = cvv;
+		this.accountNo = accountNo;
+		this.cardNo = cardNo;
+		this.customerId = customerId;
+		this.emailId = emailId;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.mail = mail;
-		this.num = num;
-		this.cvv = cvv;
-		Debit.validFrom = validFrom;
+		this.mobileNumber = mobileNumber;
+		this.validFrom = validFrom;
 		this.validUpto = validUpto;
 	}
 
-	public long getCardNum() {
-		return cardNum;
-	}
-
-	public void setCardNum(long cardNum) {
-		this.cardNum = cardNum;
-	}
-
-	public long getId() {
+	public synchronized Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public synchronized void setId(Long id) {
 		this.id = id;
 	}
+	
+	
 
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
-	public int getNum() {
-		return num;
-	}
-
-	public void setNum(int num) {
-		this.num = num;
-	}
-
-	public int getCvv() {
+	public synchronized Long getCvv() {
 		return cvv;
 	}
 
-	public void setCvv(int cvv) {
+	public synchronized void setCvv(Long cvv) {
 		this.cvv = cvv;
 	}
 
-	public static LocalDate getValidFrom() {
+	public synchronized long getCardNo() {
+		return cardNo;
+	}
+
+	public synchronized void setCardNo(long cardNo) {
+		this.cardNo = cardNo;
+	}
+
+	public synchronized Long getAccountNo() {
+		return accountNo;
+	}
+
+	public synchronized void setAccountNo(Long accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	
+
+	public synchronized String getCustomerId() {
+		return customerId;
+	}
+
+	public synchronized void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public synchronized String getEmailId() {
+		return emailId;
+	}
+
+	public synchronized void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public synchronized String getFirstName() {
+		return firstName;
+	}
+
+	public synchronized void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public synchronized String getLastName() {
+		return lastName;
+	}
+
+	public synchronized void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public synchronized Long getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public synchronized void setMobileNumber(Long mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public synchronized String getValidFrom() {
 		return validFrom;
 	}
 
-	public void setValidFrom(LocalDate validFrom) {
-		Debit.validFrom = validFrom;
+	public synchronized void setValidFrom(String validFrom) {
+		this.validFrom = validFrom;
 	}
 
-	public LocalDate getValidUpto() {
+	public synchronized String getValidUpto() {
 		return validUpto;
 	}
 
-	public void setValidUpto(LocalDate validUpto) {
+	public synchronized void setValidUpto(String validUpto) {
 		this.validUpto = validUpto;
 	}
+
+	
+	
 	
 	
 }
