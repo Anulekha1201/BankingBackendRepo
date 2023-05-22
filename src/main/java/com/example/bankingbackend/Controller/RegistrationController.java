@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.Accounts;
+import com.example.bankingbackend.Entity.LoginForm;
 import com.example.bankingbackend.Entity.PasswordRequest;
 import com.example.bankingbackend.Entity.UserInfo;
 import com.example.bankingbackend.repository.AccountsRepository;
@@ -64,5 +65,45 @@ public class RegistrationController {
 //        String verificationLink = "http://www.google.com"; // Replace with your verification link
         emailService.sendVerificationEmail(userInfo.getEmailId(), verificationLink);
         System.out.println("Mail Send..");
+    }
+    @PostMapping("/api/login")
+    	// Retrieve user by customerId or email
+    	
+    public boolean loginUser(@RequestBody LoginForm loginForm) {
+//    public void registerUser(@RequestBody UserInfo userInfo) {
+ 
+    	System.out.println(loginForm.getCustomerId());
+    	System.out.println(loginForm.getEmailId());
+    	System.out.println(loginForm.getPassword());
+    	System.out.println(loginForm.getEmailId());
+    	UserInfo user = UserInfoRepository.findByCustomerIdOrEmailId(loginForm.getCustomerId(), loginForm.getEmailId());
+
+    	if (user != null) {
+    	// Verify password
+    	if (loginForm.getPassword().equals(user.getpassword())) {
+    	// Authentication successful, return user details
+//    		System.out.println(user.getpassword());
+    		return true;
+    	}
+    	}
+    	return false;	
+//    	Optional<UserInfo> custid = UserInfoRepository.findByCustomerId(loginForm.getCustomerId());
+////    	Optional<UserInfo> emailid = UserInfoRepository.findByCustomerId(userInfo.getEmailId());
+////    	Optional<UserInfo> password = UserInfoRepository.findByCustomerId(userInfo.getpassword());
+//		if (custid == null)
+//			return false;
+//		if (emailid == null)
+//			return false;
+//		if (password == null)
+//			return false;
+//		return true;
+//    	UserInfoRepository.save(userInfo);
+//        // Save the user information in the database
+//        // Generate a verification link/token
+//        // Send the verification email
+//    	String verificationLink = "http://localhost:3000/passwordset";
+////        String verificationLink = "http://www.google.com"; // Replace with your verification link
+//        emailService.sendVerificationEmail(userInfo.getEmailId(), verificationLink);
+//        System.out.println("Mail Send..");
     }
 }

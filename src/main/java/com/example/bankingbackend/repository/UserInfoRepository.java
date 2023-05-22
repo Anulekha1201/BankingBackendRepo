@@ -11,6 +11,7 @@ import com.example.bankingbackend.Entity.UserInfo;
 public interface UserInfoRepository extends JpaRepository<UserInfo,Long>{
 
 	Optional<UserInfo> findByCustomerId(String customeridref);
+	UserInfo findByCustomerIdOrEmailId(String customerId,String emailId);
 
 	
 
