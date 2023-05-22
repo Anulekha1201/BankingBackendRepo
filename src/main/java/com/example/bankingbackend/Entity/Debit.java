@@ -37,6 +37,9 @@ public class Debit {
 	
 	@Column(name = "mobile_no")
 	private Long mobileNumber;
+
+	@Column(name = "pin_no")
+	private Long pinNo;
 	
 	@Column(name = "valid_From")
 	private String validFrom;
@@ -48,9 +51,24 @@ public class Debit {
 
 	}
 
-	public Debit(Long cvv, Long accountNo, long cardNo, String customerId, String emailId, String firstName,
-			String lastName, Long mobileNumber, String validFrom, String validUpto) {
+	
+
+	public synchronized Long getPinNo() {
+		return pinNo;
+	}
+
+
+
+	public synchronized void setPinNo(Long pinNo) {
+		this.pinNo = pinNo;
+	}
+
+
+
+	public Debit(Long id, Long cvv, Long accountNo, long cardNo, String customerId, String emailId, String firstName,
+			String lastName, Long mobileNumber, Long pinNo, String validFrom, String validUpto) {
 		super();
+		this.id = id;
 		this.cvv = cvv;
 		this.accountNo = accountNo;
 		this.cardNo = cardNo;
@@ -59,9 +77,12 @@ public class Debit {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.mobileNumber = mobileNumber;
+		this.pinNo = pinNo;
 		this.validFrom = validFrom;
 		this.validUpto = validUpto;
 	}
+
+
 
 	public synchronized Long getId() {
 		return id;
