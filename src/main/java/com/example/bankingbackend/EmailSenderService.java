@@ -19,6 +19,20 @@ public class EmailSenderService {
         message.setText("Please click the following link to verify your email address: " + verificationLink);
         mailSender.send(message);
     }
+    public void sendVerificationEmailforsetpin(String recipientEmail, Long debitcardno,Long pinno) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(recipientEmail);
+        message.setSubject("Debit Card Set/Reset Pin");
+        message.setText("You have performed set/reset pin for ur debitcard of number: " + debitcardno + " with new pin no: "+pinno);
+        mailSender.send(message);
+    }
+    public void sendVerificationEmailforBlockPin(String recipientEmail, Long debitcardno) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(recipientEmail);
+        message.setSubject("Debit Card Blocked");
+        message.setText("You have Blocked the debit card of number " + debitcardno );
+        mailSender.send(message);
+    }
 }
 //
 //import java.io.File;

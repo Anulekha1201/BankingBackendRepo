@@ -47,11 +47,34 @@ public class Debit {
 	@Column(name = "valid_Upto")
 	private String validUpto;
 	
+	@Column(name="status")
+	private String status;
 	public Debit() {
 
 	}
 
 	
+	
+
+	public Debit(Long cvv, Long accountNo, long cardNo, String customerId, String emailId, String firstName,
+			String lastName, Long mobileNumber, Long pinNo, String validFrom, String validUpto, String status) {
+		super();
+		this.cvv = cvv;
+		this.accountNo = accountNo;
+		this.cardNo = cardNo;
+		this.customerId = customerId;
+		this.emailId = emailId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.mobileNumber = mobileNumber;
+		this.pinNo = pinNo;
+		this.validFrom = validFrom;
+		this.validUpto = validUpto;
+		this.status = status;
+	}
+
+
+
 
 	public synchronized Long getPinNo() {
 		return pinNo;
@@ -64,23 +87,7 @@ public class Debit {
 	}
 
 
-
-	public Debit(Long id, Long cvv, Long accountNo, long cardNo, String customerId, String emailId, String firstName,
-			String lastName, Long mobileNumber, Long pinNo, String validFrom, String validUpto) {
-		super();
-		this.id = id;
-		this.cvv = cvv;
-		this.accountNo = accountNo;
-		this.cardNo = cardNo;
-		this.customerId = customerId;
-		this.emailId = emailId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.mobileNumber = mobileNumber;
-		this.pinNo = pinNo;
-		this.validFrom = validFrom;
-		this.validUpto = validUpto;
-	}
+	
 
 
 
@@ -176,6 +183,21 @@ public class Debit {
 		this.validUpto = validUpto;
 	}
 
+
+
+
+	public synchronized String getStatus() {
+		return status;
+	}
+
+
+
+
+	public synchronized void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 	
 	
 	

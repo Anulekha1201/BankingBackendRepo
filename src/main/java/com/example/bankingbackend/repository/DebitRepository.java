@@ -6,4 +6,6 @@ import com.example.bankingbackend.Entity.Debit;
 
 public interface DebitRepository extends JpaRepository<Debit, Long> {
 
+	Debit findByCardNo(long cardNo);
+
 }

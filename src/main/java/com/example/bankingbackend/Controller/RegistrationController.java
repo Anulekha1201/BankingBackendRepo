@@ -33,22 +33,6 @@ public class RegistrationController {
     public RegistrationController(EmailSenderService emailService) {
         this.emailService = emailService;
     }
-    @PostMapping("/api/accountnocheck")
-    public boolean accNoCheck(@RequestBody String accountNo) {
-    	Optional<Accounts> custid = AccountsRepository.findByCustomerId(accountNo);
-    	System.out.println(accountNo);
-    	if (custid == null)
-    		return false;
-    	return true;
-    	}
-  //applying for a new card
-    @PostMapping("/api/applydebitcard")
-    public void saveDebit(@RequestBody Debit debit) {
-//    	System.out.println(debit.getCvv());
-//    	System.out.println(debit.getFirstName());
-//    	System.out.println(debit.getValidFrom());
-    	DebitRepository.save(debit);
-    }
     
     @PostMapping("/api/password")
     public boolean updatePassword( @RequestBody PasswordRequest password) {
