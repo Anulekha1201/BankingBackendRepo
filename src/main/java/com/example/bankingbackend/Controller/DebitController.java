@@ -44,25 +44,19 @@ public class DebitController {
   //applying for a new card
     @PostMapping("/api/applydebitcard")
     public void saveDebit(@RequestBody Debit debit) {
-//    	System.out.println(debit.getCvv());
-//    	System.out.println(debit.getFirstName());
-//    	System.out.println(debit.getValidFrom());
+
     	DebitRepository.save(debit);
     }
   //set a pin
     @PostMapping("/api/setorresetpin")
     public boolean setPin(@RequestBody setresetPin setpin) {
-    	Debit debit=DebitRepository.findByCardNo(setpin.getCardNo());
-    	
+    	Debit debit=DebitRepository.findByCardNo(setpin.getCardNo());    	
 //      System.out.println(setpin.getCardNo());
-//      System.out.println(" "+setpin.getPinNo());
-//      System.out.println(" "+setpin.getStatus());
+
       if (debit == null) {
         return false;
       }
-//      debit.setPinNo(setpin.getPinNo());
-//      debit.setStatus(setpin.getStatus());
-//      System.out.println(debit.getEmailId());
+
       
       DebitRepository.save(debit);
       
@@ -75,8 +69,6 @@ public class DebitController {
     @PostMapping("/api/blockcard")
     public boolean blockDebitCard(@RequestBody BlockCard blockcard) {
     	Debit debit=DebitRepository.findByCardNo(blockcard.getCardNo());
-//
-//      System.out.println(" "+blockcard.getStatus());
       if (debit == null) {
         return false;
       }
@@ -89,26 +81,5 @@ public class DebitController {
       return true;
     }
 
-//	@GetMapping("/debitcards")
-//	public List<Debit> getList(){
-//		return debitRepository.findAll();
-//	}
-//	
-//	@GetMapping("/debit/{id}")
-//	public Optional<Debit> getById(@PathVariable long id) {
-//		return debitRepository.findById(id);
-//	}
-//	
-//	@PostMapping("/addNewDebit")
-//	public Debit saveDebit(@RequestBody Debit debit) {
-//		return debitRepository.save(debit);
-//	}
-//	
-//	
-//	@DeleteMapping("/delete/{id}")
-//	public String deleteDebit(@PathVariable long id) {
-//		debitRepository.deleteById(id);
-//		return "Debit Card of Customer Id : "+id;
-//	}
 
 }

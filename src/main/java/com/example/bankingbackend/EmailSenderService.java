@@ -33,6 +33,16 @@ public class EmailSenderService {
         message.setText("You have Blocked the debit card of number " + debitcardno );
         mailSender.send(message);
     }
+
+	public void sendVerificationEmailforsupport(String name, String email, String msg) {
+		// TODO Auto-generated method stub
+		SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("anulekhaachanta7@gmail.com");
+        message.setSubject("Support team Q/A");
+        message.setText("A person named "+name+" of mail "+email+" has this query "+msg);
+        mailSender.send(message);
+		
+	}
 }
 //
 //import java.io.File;
