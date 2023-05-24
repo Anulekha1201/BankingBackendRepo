@@ -41,12 +41,21 @@ public class Accounts {
 	@Column(name = "pan_no")
 	private String panNumber;
 	
+	@Column(name = "balance")
+	private Long balance;
+	
+	@Column(name = "status")
+	private String status;
+	
 	public Accounts() {
 
 	}
 
+	
+	
 	public Accounts(String customerId, Long accountNo, String accountType, String firstName, String lastName,
-			String emailId, Long mobileNumber, String address, String state, String country, String panNumber) {
+			String emailId, Long mobileNumber, String address, String state, String country, String panNumber,
+			Long balance, String status) {
 		super();
 		this.customerId = customerId;
 		this.accountNo = accountNo;
@@ -59,7 +68,11 @@ public class Accounts {
 		this.State = state;
 		this.Country = country;
 		this.panNumber = panNumber;
+		this.balance = balance;
+		this.status = status;
 	}
+
+
 
 	public synchronized Long getId() {
 		return id;
@@ -158,5 +171,30 @@ public class Accounts {
 	public synchronized void setPanNumber(String panNumber) {
 		this.panNumber = panNumber;
 	}
+
+
+
+	public synchronized Long getBalance() {
+		return balance;
+	}
+
+
+
+	public synchronized void setBalance(Long balance) {
+		this.balance = balance;
+	}
+
+
+
+	public synchronized String getStatus() {
+		return status;
+	}
+
+
+
+	public synchronized void setStatus(String status) {
+		this.status = status;
+	}
+	
 	
 }

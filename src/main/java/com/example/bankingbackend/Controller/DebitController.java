@@ -35,12 +35,16 @@ public class DebitController {
     }
 	@PostMapping("/api/accountnocheck")
     public boolean accNoCheck(@RequestBody String accountNo) {
+    	
     	Optional<Accounts> custid = AccountsRepository.findByCustomerId(accountNo);
     	System.out.println(accountNo);
-    	if (custid == null)
-    		return false;
-    	return true;
-    	}
+		if (custid == null )
+			return false;
+		if(custid.get().getStatus()=="Active") {
+			return true;
+		}
+		return false;
+	}
   //applying for a new card
     @PostMapping("/api/applydebitcard")
     public void saveDebit(@RequestBody Debit debit) {

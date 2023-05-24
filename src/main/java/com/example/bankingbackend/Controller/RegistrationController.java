@@ -48,11 +48,16 @@ public class RegistrationController {
     }
     @PostMapping("/api/checkCustomerId")
     public boolean customeridinfo(@RequestBody String customerId) {
+    	
     	Optional<Accounts> custid = AccountsRepository.findByCustomerId(customerId);
     	System.out.println(customerId);
-		if (custid == null)
+    	
+		if (custid == null )
 			return false;
-		return true;
+		if(custid.get().getStatus()=="Active") {
+			return true;
+		}
+		return false;
       }
     @PostMapping("/api/register")
     public void registerUser(@RequestBody UserInfo userInfo) {
