@@ -1,10 +1,11 @@
 package com.example.bankingbackend.Controller;
 
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 //import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,43 +27,61 @@ import com.example.bankingbackend.repository.DebitRepository;
 public class DebitController {
 
 	@Autowired
-	private DebitRepository DebitRepository;
+	private DebitRepository debitRepository;
+	
+	@Autowired
+	private AccountsRepository accountsRepository;
 	
 	private final EmailSenderService emailService;
 	
 	public DebitController(EmailSenderService emailService) {
         this.emailService = emailService;
     }
-	@PostMapping("/api/accountnocheck")
-    public boolean accNoCheck(@RequestBody String accountNo) {
+
+	@PostMapping("/api/accountnocheck/{accountNo}")
+    public boolean accNoCheck(@PathVariable String accountNo) {
     	
-    	Optional<Accounts> custid = AccountsRepository.findByCustomerId(accountNo);
-    	System.out.println(accountNo);
-		if (custid == null )
-			return false;
-		if(custid.get().getStatus()=="Active") {
-			return true;
-		}
-		return false;
+		Accounts accno = accountsRepository.findByAccountNo(accountNo);
+    	System.out.println(accno.getAccountNo());
+    	if(accno.getAccountNo()==null) {
+    		return false;
+    	}
+    	else {
+    		if(accno.getStatus().equals("Active")) {
+//				System.out.println(accno.getStatus()+" "+accno.getAccountNo());
+				return true;
+			}
+    		return false;
+    	}
 	}
+	
   //applying for a new card
     @PostMapping("/api/applydebitcard")
-    public void saveDebit(@RequestBody Debit debit) {
-
-    	DebitRepository.save(debit);
+    public boolean saveDebit(@RequestBody Debit debit) {
+    	Long accountno=debit.getAccountNo();
+    	System.out.println(accountno);
+    	Debit d=debitRepository.findByAccountNo(accountno);
+    	System.out.println(accountno+" "+d);
+    	if(d==null) {
+    		debitRepository.save(debit);
+    		return true;
+    	}
+    	else {
+    		System.out.println("Customer already exists");
+    		return false;
+    	}
     }
   //set a pin
     @PostMapping("/api/setorresetpin")
     public boolean setPin(@RequestBody setresetPin setpin) {
-    	Debit debit=DebitRepository.findByCardNo(setpin.getCardNo());    	
+    	Debit debit=debitRepository.findByCardNo(setpin.getCardNo());    	
 //      System.out.println(setpin.getCardNo());
 
       if (debit == null) {
         return false;
       }
 
-      
-      DebitRepository.save(debit);
+      debitRepository.save(debit);
       
       emailService.sendVerificationEmailforsetpin(debit.getEmailId(), debit.getCardNo(),debit.getPinNo());
       System.out.println("Mail Send..");
@@ -72,12 +91,12 @@ public class DebitController {
   //blocking a debitCard
     @PostMapping("/api/blockcard")
     public boolean blockDebitCard(@RequestBody BlockCard blockcard) {
-    	Debit debit=DebitRepository.findByCardNo(blockcard.getCardNo());
+    	Debit debit=debitRepository.findByCardNo(blockcard.getCardNo());
       if (debit == null) {
         return false;
       }
       debit.setStatus(blockcard.getStatus());
-      DebitRepository.save(debit);
+      debitRepository.save(debit);
       
       emailService.sendVerificationEmailforBlockPin(debit.getEmailId(), debit.getCardNo());
       System.out.println("Mail Send..");

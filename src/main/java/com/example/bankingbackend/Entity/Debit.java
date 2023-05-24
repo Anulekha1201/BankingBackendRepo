@@ -23,8 +23,7 @@ public class Debit {
 	
 	@Column(name = "card_no")
 	private long cardNo;
-	@Column(name = "customer_id")
-	private String customerId;
+	
 	
 	
 	@Column(name = "email_id")
@@ -56,13 +55,13 @@ public class Debit {
 	
 	
 
-	public Debit(Long cvv, Long accountNo, long cardNo, String customerId, String emailId, String firstName,
+	public Debit(Long cvv, Long accountNo, long cardNo, String emailId, String firstName,
 			String lastName, Long mobileNumber, Long pinNo, String validFrom, String validUpto, String status) {
 		super();
 		this.cvv = cvv;
 		this.accountNo = accountNo;
 		this.cardNo = cardNo;
-		this.customerId = customerId;
+		
 		this.emailId = emailId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -126,14 +125,6 @@ public class Debit {
 	}
 
 	
-
-	public synchronized String getCustomerId() {
-		return customerId;
-	}
-
-	public synchronized void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
 
 	public synchronized String getEmailId() {
 		return emailId;

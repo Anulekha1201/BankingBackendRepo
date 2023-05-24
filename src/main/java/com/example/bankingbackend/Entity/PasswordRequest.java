@@ -1,7 +1,7 @@
 package com.example.bankingbackend.Entity;
 public class PasswordRequest {
     private String password;
-
+    private String  customerId;
     // Getter and Setter
 
     public String getPassword() {
@@ -11,4 +11,13 @@ public class PasswordRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
+	public synchronized String getCustomerId() {
+		return customerId;
+	}
+
+	public synchronized void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+    
 }
