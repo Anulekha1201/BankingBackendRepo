@@ -12,7 +12,7 @@ public class AccountService {
 	@Autowired
 	private AccountsRepository accountsRepository;
 	
-	public boolean checkAccountExists(String accountNo)
+	public boolean checkAccountExists(Long accountNo)
 	{
 		Accounts accno = accountsRepository.findByAccountNo(accountNo);
     	if(accno==null) {
@@ -28,7 +28,7 @@ public class AccountService {
     	}
 	}
 	
-	public Accounts getAccWithAccNo(String accountNo)
+	public Accounts getAccWithAccNo(Long accountNo)
 	{
 		Accounts accno = accountsRepository.findByAccountNo(accountNo);
 		return accno;

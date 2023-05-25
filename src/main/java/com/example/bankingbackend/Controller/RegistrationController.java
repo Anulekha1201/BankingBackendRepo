@@ -86,7 +86,7 @@ public class RegistrationController {
         System.out.println("Mail Send..");
     	}
     	else {
-    		System.out.println("Customer already exists");
+    		System.out.println("Customer alrdy exists");
     	}
     }
     

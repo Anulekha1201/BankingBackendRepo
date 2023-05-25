@@ -36,7 +36,7 @@ public class DebitController {
     }
 
 	@PostMapping("/api/accountnocheck/{accountNo}")
-    public boolean accNoCheck(@PathVariable String accountNo) {
+    public boolean accNoCheck(@PathVariable Long accountNo) {
     	
 		return accountService.checkAccountExists(accountNo);
 	}

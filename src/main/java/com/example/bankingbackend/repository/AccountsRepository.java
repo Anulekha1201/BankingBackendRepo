@@ -13,7 +13,7 @@ import com.example.bankingbackend.Entity.Accounts;
 public interface AccountsRepository extends JpaRepository<Accounts,Long>{
 
 	List<Accounts> findByCustomerId(String customerId);
-	Accounts findByAccountNo(String accountNo);
+	Accounts findByAccountNo(Long accountNo);
 //	static Optional<Accounts> findByCustomerId(String customerId) {
 //		// TODO Auto-generated method stub
 //		
