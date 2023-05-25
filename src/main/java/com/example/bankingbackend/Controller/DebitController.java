@@ -1,8 +1,6 @@
 package com.example.bankingbackend.Controller;
 
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.Accounts;
-import com.example.bankingbackend.Entity.BlockCard;
+import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
-import com.example.bankingbackend.Entity.UserInfo;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.repository.AccountsRepository;
 import com.example.bankingbackend.repository.DebitRepository;
@@ -75,14 +72,14 @@ public class DebitController {
     @PostMapping("/api/setorresetpin")
     public boolean setPin(@RequestBody setresetPin setpin) {
     	Debit debit=debitRepository.findByCardNo(setpin.getCardNo());    	
-//      System.out.println(setpin.getCardNo());
-
-      if (debit == null) {
+      System.out.println(setpin.getPinNo());
+      if (debit== null) {
         return false;
       }
-
+      debit.setPinNo(setpin.getPinNo());
+      debit.setStatus(setpin.getStatus());
+      System.out.println(debit.getPinNo()+" "+debit.getStatus());
       debitRepository.save(debit);
-      
       emailService.sendVerificationEmailforsetpin(debit.getEmailId(), debit.getCardNo(),debit.getPinNo());
       System.out.println("Mail Send..");
       
@@ -90,11 +87,13 @@ public class DebitController {
       }
   //blocking a debitCard
     @PostMapping("/api/blockcard")
-    public boolean blockDebitCard(@RequestBody BlockCard blockcard) {
+    public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) {
     	Debit debit=debitRepository.findByCardNo(blockcard.getCardNo());
+    	System.out.println(blockcard.getCardNo());
       if (debit == null) {
         return false;
       }
+      else{
       debit.setStatus(blockcard.getStatus());
       debitRepository.save(debit);
       
@@ -102,7 +101,25 @@ public class DebitController {
       System.out.println("Mail Send..");
       
       return true;
+      }
     }
-
-
+    @PostMapping("/api/Unblockcard")
+    
+    public boolean UnblockDebitCard(@RequestBody BlockorUnBlockCard Unblockcard) {
+    	Debit debit=debitRepository.findByCardNo(Unblockcard.getCardNo());
+    	System.out.println(Unblockcard.getCardNo());
+      if (debit == null) {
+        return false;
+      }
+      else{
+      debit.setStatus(Unblockcard.getStatus());
+      debitRepository.save(debit);
+      
+      emailService.sendVerificationEmailforUnBlockPin(debit.getEmailId(), debit.getCardNo());
+      System.out.println("Mail Send..");
+      
+      return true;
+    	
+    }
+    }
 }

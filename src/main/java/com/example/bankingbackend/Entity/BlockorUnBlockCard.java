@@ -1,6 +1,6 @@
 package com.example.bankingbackend.Entity;
 
-public class BlockCard {
+public class BlockorUnBlockCard {
 	private long cardNo;
 	private Long pinNo;
 	private String status;

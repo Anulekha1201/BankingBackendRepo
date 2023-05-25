@@ -43,6 +43,15 @@ public class EmailSenderService {
         mailSender.send(message);
 		
 	}
+	
+	public void sendVerificationEmailforUnBlockPin(String recipientEmail, Long debitcardno) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(recipientEmail);
+        message.setSubject("Debit Card UnBlocked");
+        message.setText("You have UnBlocked the debit card of number " + debitcardno );
+        mailSender.send(message);
+    }
+
 }
 //
 //import java.io.File;

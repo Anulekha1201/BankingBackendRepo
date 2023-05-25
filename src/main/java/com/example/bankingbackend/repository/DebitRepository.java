@@ -10,7 +10,7 @@ import com.example.bankingbackend.Entity.UserInfo;
 
 public interface DebitRepository extends JpaRepository<Debit, Long> {
 
-	Debit findByCardNo(long cardNo);
+	Debit findByCardNo(Long cardNo);
 	Debit findByAccountNo(Long accountNo);
 	
 
