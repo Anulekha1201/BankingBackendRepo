@@ -16,12 +16,14 @@ public class AccountService {
 	{
 		Accounts accno = accountsRepository.findByAccountNo(accountNo);
     	if(accno==null) {
+    		System.out.println("Account doesn't exist");
     		return false;
     	}
     	else {
     		if(accno.getStatus().equals("Active")) {
 				return true;
 			}
+    		System.out.println("Account exists but in not inactive");
     		return false;
     	}
 	}

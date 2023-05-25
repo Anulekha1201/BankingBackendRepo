@@ -11,7 +11,6 @@ import com.example.bankingbackend.Entity.Accounts;
 import com.example.bankingbackend.Service.AccountService;
 
 @CrossOrigin("*")
-
 @RestController
 public class TransactionController {
 	
@@ -77,7 +76,7 @@ public class TransactionController {
 		
 		if(!(accExists && accExists2))
 		{
-			System.out.println("Account doesn't exists.");
+			System.out.println("Account doesn't exists."+(accExists && accExists2));
 			return false;
 		}
 		else
