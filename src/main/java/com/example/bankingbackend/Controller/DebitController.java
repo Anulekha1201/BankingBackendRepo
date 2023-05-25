@@ -18,19 +18,19 @@ import com.example.bankingbackend.Entity.BlockCard;
 import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.UserInfo;
 import com.example.bankingbackend.Entity.setresetPin;
+import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.repository.AccountsRepository;
 import com.example.bankingbackend.repository.DebitRepository;
 @CrossOrigin("*")
 
 @RestController
-@RequestMapping("/")
 public class DebitController {
 
 	@Autowired
 	private DebitRepository debitRepository;
 	
 	@Autowired
-	private AccountsRepository accountsRepository;
+	private AccountService accountService;
 	
 	private final EmailSenderService emailService;
 	
@@ -41,25 +41,13 @@ public class DebitController {
 	@PostMapping("/api/accountnocheck/{accountNo}")
     public boolean accNoCheck(@PathVariable String accountNo) {
     	
-		Accounts accno = accountsRepository.findByAccountNo(accountNo);
-    	System.out.println(accno.getAccountNo());
-    	if(accno.getAccountNo()==null) {
-    		return false;
-    	}
-    	else {
-    		if(accno.getStatus().equals("Active")) {
-//				System.out.println(accno.getStatus()+" "+accno.getAccountNo());
-				return true;
-			}
-    		return false;
-    	}
+		return accountService.checkAccountExists(accountNo);
 	}
 	
   //applying for a new card
     @PostMapping("/api/applydebitcard")
     public boolean saveDebit(@RequestBody Debit debit) {
     	Long accountno=debit.getAccountNo();
-    	System.out.println(accountno);
     	Debit d=debitRepository.findByAccountNo(accountno);
     	System.out.println(accountno+" "+d);
     	if(d==null) {
