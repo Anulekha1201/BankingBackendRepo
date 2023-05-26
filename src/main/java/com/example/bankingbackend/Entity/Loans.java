@@ -35,7 +35,7 @@ public class Loans {
 	
 	@Min(value = 1000000000000000L, message = "Card number should be 16 digits")
 	@Max(value = 9999999999999999L, message = "Card number should be 16 digits")
-	@Column(name = "card_no")
+	@Column(name = "card_no",unique=true)
 	private Long cardNo;
 	
 	@Column(name = "total_loan_amount")
@@ -47,13 +47,13 @@ public class Loans {
 	private float interestRate;
 	
 	@Column(name = "installment")
-	private Long installment;
+	private float installment;
 	
 	public Loans() {}
 
 
 	public Loans(String loanType, String firstName, String lastName, Long cardNo, Long totalLoanAmt, String tenure,
-			float interestRate, Long installment) {
+			float interestRate, float installment) {
 		super();
 		this.loanType = loanType;
 		this.firstName = firstName;
@@ -131,11 +131,11 @@ public class Loans {
 		this.interestRate = interestRate;
 	}
 
-	public Long getInstallment() {
+	public float getInstallment() {
 		return installment;
 	}
 
-	public synchronized void setInstallment(Long installment) {
+	public synchronized void setInstallment(float installment) {
 		this.installment = installment;
 	}
 	
