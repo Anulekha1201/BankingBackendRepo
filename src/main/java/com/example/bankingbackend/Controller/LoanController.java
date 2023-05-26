@@ -39,15 +39,15 @@ public class LoanController {
 	
 	@PostMapping("api/applyLoan")
 	public boolean addLoan(@RequestBody Loans loan ){
-		Long cardNo= loan.getcardNo();
-		System.out.println("carNo: "+loan.getcardNo());
+		Long cardNo= loan.getCardNo();
+		System.out.println("carNo: "+loan.getCardNo());
 		if(debitService.checkDebitExists(cardNo))
 		{
 			if(loanService.checkIfLoanExistsWithDebitCardNo(cardNo))
 			{
 				System.out.println(loanService.checkIfLoanExistsWithDebitCardNo(cardNo));
 				System.out.println(debitService.checkDebitExists(cardNo)+"\ncardNo: "+cardNo);
-				System.out.println("cardNo: "+loan.getcardNo());
+				System.out.println("cardNo: "+loan.getCardNo());
 				loanService.applyLoan(loan);
 				System.out.println("loan applied");
 				return true;
