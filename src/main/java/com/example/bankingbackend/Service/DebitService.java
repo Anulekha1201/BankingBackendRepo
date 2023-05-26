@@ -22,7 +22,7 @@ public class DebitService {
 	
 	public boolean checkDebitExists(Long cardNo)
 	{
-		if(debitRepository.findByCardNo(cardNo)== null)
+		if(debitRepository.findByCardNo(cardNo)!= null)
 			return true;
 		else
 			return false;

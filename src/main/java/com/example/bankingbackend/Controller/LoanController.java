@@ -37,19 +37,18 @@ public class LoanController {
 //		return loanRepository.findById(loanId).orElse(null);
 //	}
 	
-	@PostMapping("api/applyLoan/{loan}")
-	public boolean addLoan(@PathVariable Loans loan ){
+	@PostMapping("api/applyLoan")
+	public boolean addLoan(@RequestBody Loans loan ){
 		Long cardNo= loan.getcardNo();
 		System.out.println("carNo: "+loan.getcardNo());
 		if(debitService.checkDebitExists(cardNo))
 		{
-			if(loanService.checkUniqueCardNo(cardNo))
+			if(loanService.checkIfLoanExistsWithDebitCardNo(cardNo))
 			{
-				System.out.println(loanService.checkUniqueCardNo(cardNo));
+				System.out.println(loanService.checkIfLoanExistsWithDebitCardNo(cardNo));
 				System.out.println(debitService.checkDebitExists(cardNo)+"\ncardNo: "+cardNo);
-				System.out.println("carNo: "+loan.getcardNo());
+				System.out.println("cardNo: "+loan.getcardNo());
 				loanService.applyLoan(loan);
-				
 				System.out.println("loan applied");
 				return true;
 			}

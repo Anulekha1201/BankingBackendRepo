@@ -16,10 +16,9 @@ public class LoanService {
 		loanRepository.save(loan);	
 	}
 	
-	public boolean checkUniqueCardNo(Long cardNo)
+	public boolean checkIfLoanExistsWithDebitCardNo(Long cardNo)
 	{
-		
-		if(loanRepository.findByCardNo(cardNo) != null) {
+		if(loanRepository.findByCardNo(cardNo) == null) {
 			return true;
 		}
 		else {
