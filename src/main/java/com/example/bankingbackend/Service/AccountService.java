@@ -12,21 +12,23 @@ public class AccountService {
 	@Autowired
 	private AccountsRepository accountsRepository;
 	
-	public boolean checkAccountExists(String accountNo)
+	public boolean checkAccountExists(Long accountNo)
 	{
 		Accounts accno = accountsRepository.findByAccountNo(accountNo);
     	if(accno==null) {
+    		System.out.println("Account doesn't exist");
     		return false;
     	}
     	else {
     		if(accno.getStatus().equals("Active")) {
 				return true;
 			}
+    		System.out.println("Account exists but in not inactive");
     		return false;
     	}
 	}
 	
-	public Accounts getAccWithAccNo(String accountNo)
+	public Accounts getAccWithAccNo(Long accountNo)
 	{
 		Accounts accno = accountsRepository.findByAccountNo(accountNo);
 		return accno;
