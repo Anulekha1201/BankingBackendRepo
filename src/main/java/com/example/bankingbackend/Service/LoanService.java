@@ -26,6 +26,31 @@ public class LoanService {
 		}
 		
 	}
+    
+	public Loans getLoanByLoanId(Long loanId)
+	{
+		Loans l = loanRepository.findByLoanId(loanId);
+		if(l!=null)
+		{
+			return l;
+		}
+		return null;
+	}
+	
+	
+	@SuppressWarnings("null")
+	public float getInstallmentByLoanId(Long loanId)
+	{
+		Loans l = loanRepository.findByLoanId(loanId);
+		if(l!=null)
+		{
+		
+		return l.getInstallment();
+		}
+		
+		return (Float) null;
+		
+	}
 	
 
 }

@@ -1,12 +1,14 @@
 package com.example.bankingbackend.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.bankingbackend.Entity.TransactionHistory;
 import com.example.bankingbackend.repository.TransactionHistoryRepository;
+
 
 @Service
 public class TransactionHistoryService {
@@ -25,4 +27,6 @@ public class TransactionHistoryService {
 		List<TransactionHistory> l = transactionHistoryRepo.findByAccountNo(accountNo);
 		return l;
 	}
+	
+
 }

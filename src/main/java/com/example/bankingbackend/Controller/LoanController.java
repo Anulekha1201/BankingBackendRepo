@@ -66,6 +66,21 @@ public class LoanController {
 		}
 	}
 	
+	@SuppressWarnings("null")
+	@GetMapping("api/getInstallment/{loanId}")
+	public float payLoanByLoanId(@PathVariable Long loanId)
+	{
+       
+		float l=loanService.getInstallmentByLoanId(loanId);
+//		if(l==(Float) null)
+//		{
+//			System.out.println("Loan with this id doesn't exists" );
+//		return (Float) null;
+//		}
+		return l;
+		
+	}
+	
 	
 	
 

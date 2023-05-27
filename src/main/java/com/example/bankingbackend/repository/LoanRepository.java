@@ -11,5 +11,8 @@ import com.example.bankingbackend.Entity.Loans;
 public interface LoanRepository extends JpaRepository<Loans, Long>{
 	
 	Loans findByCardNo(Long cardNo);
+	
+	Loans findByLoanId(Long loanId);
+	
 
 }
