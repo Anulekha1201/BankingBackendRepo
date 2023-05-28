@@ -6,20 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.bankingbackend.Entity.Loans;
 
 import com.example.bankingbackend.Entity.Accounts;
 import com.example.bankingbackend.Entity.TransactionHistory;
 import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.LoanService;
 import com.example.bankingbackend.Service.TransactionHistoryService;
 import com.example.bankingbackend.repository.TransactionHistoryRepository;
 
 @CrossOrigin("*")
 @RestController
 public class TransactionController {
-	
+	@Autowired
+	public LoanService loanService;
 	@Autowired
 	private AccountService accountService;
 	
@@ -27,7 +32,7 @@ public class TransactionController {
 	private TransactionHistoryService transactionHistoryService;
 	
 	@PutMapping("/api/transactions/deposit/{accountNo}/{amount}")
-    public boolean deposit(@PathVariable Long accountNo, @PathVariable Long amount) 
+    public boolean deposit(@PathVariable Long accountNo, @PathVariable float amount) 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
 		
@@ -49,7 +54,7 @@ public class TransactionController {
 	}
 
 	@PutMapping("/api/transactions/withDrawal/{accountNo}/{amount}")
-    public boolean withDrawal(@PathVariable Long accountNo, @PathVariable Long amount) 
+    public boolean withDrawal(@PathVariable Long accountNo, @PathVariable float amount) 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
 		
@@ -61,7 +66,7 @@ public class TransactionController {
 		else
 		{
 			Accounts account= accountService.getAccWithAccNo(accountNo);
-			Long balance = account.getBalance();
+			float balance = account.getBalance();
 			if(balance<amount)
 			{
 				System.out.println("Balance is lower than withdrawal amount");
@@ -82,7 +87,7 @@ public class TransactionController {
 	}
 	
 	@PutMapping("/api/transactions/transfer/{accountNoFrom}/{accountNoTo}/{amount}")
-    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable Long amount) 
+    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable float amount) 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNoFrom);
 		boolean accExists2= accountService.checkAccountExists(accountNoTo);
@@ -96,7 +101,7 @@ public class TransactionController {
 		{
 			Accounts accountFrom= accountService.getAccWithAccNo(accountNoFrom);
 			Accounts accountTo= accountService.getAccWithAccNo(accountNoTo);
-			Long balanceFrom = accountFrom.getBalance();
+			float balanceFrom = accountFrom.getBalance();
 			if(balanceFrom<amount)
 			{
 				System.out.println("Insufficient balance");
@@ -124,6 +129,42 @@ public class TransactionController {
 		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
 		
 		return th;
+	}
+	
+	@SuppressWarnings("null")
+	@GetMapping("api/getInstallment/{loanId}")
+	public float payLoanByLoanId(@PathVariable Long loanId)
+	{
+       
+		float l=loanService.getInstallmentByLoanId(loanId);
+//		if(l==(Float) null)
+//		{
+//			System.out.println("Loan with this id doesn't exists" );
+//		return (Float) null;
+//		}
+		return l;	
+	}
+	
+	@PutMapping("api/payLoan/{loanId}/{accountNo}")
+	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) {
+		    float l = loanService.getInstallmentByLoanId(loanId);
+	        
+		    Loans loan= loanService.getLoanByLoanId(loanId);
+			Accounts account= accountService.getAccWithAccNo(accountNo);
+
+				account.setBalance(account.getBalance()-l);
+				accountService.saveAccounts(account);
+				System.out.println("Paid loan : "+l);
+				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", null);
+				transactionHistoryService.addTransactionHistory(t);
+				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
+				loanService.applyLoan(loan);
+				return true;
+
+		
+		
+		
+		
 	}
 	
 

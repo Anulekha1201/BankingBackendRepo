@@ -42,7 +42,7 @@ public class Accounts {
 	private String panNumber;
 	
 	@Column(name = "balance")
-	private Long balance;
+	private float balance;
 	
 	@Column(name = "status")
 	private String status;
@@ -55,7 +55,7 @@ public class Accounts {
 	
 	public Accounts(String customerId, Long accountNo, String accountType, String firstName, String lastName,
 			String emailId, Long mobileNumber, String address, String state, String country, String panNumber,
-			Long balance, String status) {
+			float balance, String status) {
 		super();
 		this.customerId = customerId;
 		this.accountNo = accountNo;
@@ -174,13 +174,13 @@ public class Accounts {
 
 
 
-	public synchronized Long getBalance() {
+	public synchronized float getBalance() {
 		return balance;
 	}
 
 
 
-	public synchronized void setBalance(Long balance) {
+	public synchronized void setBalance(float balance) {
 		this.balance = balance;
 	}
 

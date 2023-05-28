@@ -28,7 +28,7 @@ public class TransactionHistory {
 	private String transactionType;
 	
 	@Column(name= "amount")
-	private Long amount;
+	private float amount;
 	
 	@Column(name = "to_account")
 	private Long to_account;
@@ -45,7 +45,7 @@ public class TransactionHistory {
 		super();
 	}
 
-	public TransactionHistory(Long transaction_id, Long accountNo, String trasactionType, Long amount,
+	public TransactionHistory(Long transaction_id, Long accountNo, String trasactionType, float amount,
 			Long to_account, String transactionStatus, Date createdDate) {
 		super();
 		this.transaction_id = transaction_id;
@@ -81,11 +81,11 @@ public class TransactionHistory {
 		this.transactionType = trasactionType;
 	}
 
-	public Long getAmount() {
+	public float getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Long amount) {
+	public void setAmount(float amount) {
 		this.amount = amount;
 	}
 
