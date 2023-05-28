@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "loans")
 public class Loans {
-	
+	 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "loan_id")
@@ -23,12 +23,12 @@ public class Loans {
 	@Column(name = "loan_type")
 	private String loanType;
 	
-	@Size(min = 3,max = 10, message = "{firstname.invalid}")
+	@Size(min = 3,max = 15, message = "{firstname.invalid}")
 	@NotBlank(message = "FirstName is mandatroy")
 	@Column(name = "first_name")
 	private String firstName;
 	
-	@Size(min = 3,max = 10, message = "{lastname.invalid}")
+	@Size(min = 3,max = 15, message = "{lastname.invalid}")
 	@NotBlank(message = "LastName is mandatroy")
 	@Column(name = "last_name")
 	private String lastName;
@@ -55,8 +55,8 @@ public class Loans {
 	public Loans() {}
 
 	public Loans(Long loanId, String loanType,
-			@Size(min = 3, max = 10, message = "{firstname.invalid}") @NotBlank(message = "FirstName is mandatroy") String firstName,
-			@Size(min = 3, max = 10, message = "{lastname.invalid}") @NotBlank(message = "LastName is mandatroy") String lastName,
+			@Size(min = 3, max = 15, message = "{firstname.invalid}") @NotBlank(message = "FirstName is mandatroy") String firstName,
+			@Size(min = 3, max = 15, message = "{lastname.invalid}") @NotBlank(message = "LastName is mandatroy") String lastName,
 			@Min(value = 1000000000000000L, message = "Card number should be 16 digits") @Max(value = 999999999999999L, message = "Card number should be 16 digits") Long cardNo,
 			Long totalLoanAmt, String tenure, float interestRate, float installment, float balanceAmt) {
 		super();

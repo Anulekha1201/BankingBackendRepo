@@ -131,16 +131,27 @@ public class TransactionController {
 		return th;
 	}
 	
-	@SuppressWarnings("null")
-	@GetMapping("api/getInstallment/{loanId}")
-	public float payLoanByLoanId(@PathVariable Long loanId)
+	@GetMapping("api/user/checkIfLoanExistsByLoanId/{loanId}")
+	public boolean checkIfLoanExistsByLoanId(@PathVariable Long loanId)
 	{
-       
+		Loans l=loanService.getLoanByLoanId(loanId);
+		if(l==null)
+		{
+			System.out.println("Loan dosn't exists with this loan id");
+			return false;
+		}
+		return true;	
+	}
+	
+	@SuppressWarnings("null")
+	@GetMapping("api/user/getInstallmentByLoanId/{loanId}")
+	public float getLoanInstallmentByLoanId(@PathVariable Long loanId)
+	{
 		float l=loanService.getInstallmentByLoanId(loanId);
 		return l;	
 	}
 	
-	@PutMapping("api/payLoan/{loanId}/{accountNo}")
+	@PutMapping("api/user/payLoanTransaction/{loanId}/{accountNo}")
 	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) {
 		    float l = loanService.getInstallmentByLoanId(loanId);
 	        
@@ -149,16 +160,12 @@ public class TransactionController {
 
 				account.setBalance(account.getBalance()-l);
 				accountService.saveAccounts(account);
-				System.out.println("Paid loan : "+l);
 				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", null);
 				transactionHistoryService.addTransactionHistory(t);
 				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
 				loanService.applyLoan(loan);
+				System.out.println("Paid loan : "+l);
 				return true;
-
-		
-		
-		
 		
 	}
 	
