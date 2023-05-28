@@ -31,8 +31,8 @@ public class TransactionController {
 	@Autowired
 	private TransactionHistoryService transactionHistoryService;
 	
-	@PutMapping("/api/transactions/deposit/{accountNo}/{amount}")
-    public boolean deposit(@PathVariable Long accountNo, @PathVariable float amount) 
+	@PutMapping("/api/user/transactions/deposit/{accountNo}/{amount}")
+    public boolean deposit(@PathVariable Long accountNo, @PathVariable Long amount) 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
 		
@@ -53,8 +53,8 @@ public class TransactionController {
 		}
 	}
 
-	@PutMapping("/api/transactions/withDrawal/{accountNo}/{amount}")
-    public boolean withDrawal(@PathVariable Long accountNo, @PathVariable float amount) 
+	@PutMapping("/api/user/transactions/withDrawal/{accountNo}/{amount}")
+    public boolean withDrawal(@PathVariable Long accountNo, @PathVariable Long amount) 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
 		
@@ -86,8 +86,8 @@ public class TransactionController {
     	
 	}
 	
-	@PutMapping("/api/transactions/transfer/{accountNoFrom}/{accountNoTo}/{amount}")
-    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable float amount) 
+	@PutMapping("/api/user/transactions/transfer/{accountNoFrom}/{accountNoTo}/{amount}")
+    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable Long amount) 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNoFrom);
 		boolean accExists2= accountService.checkAccountExists(accountNoTo);
@@ -123,7 +123,7 @@ public class TransactionController {
     	
 	}
 
-	@GetMapping("api/transactionHistory/{accountNo}")
+	@GetMapping("api/user/transactionHistory/{accountNo}")
 	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
 	{
 		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
