@@ -17,7 +17,7 @@ public class Accounts {
 	//customer id,firstname lastname emailId phonenumber
 	//login-email password
 	@Column(name = "customer_id")
-	private String customerId;
+	private String customerId; 
 	@Column(name = "account_no")
 	private Long accountNo;
 	@Column(name = "account_type")
