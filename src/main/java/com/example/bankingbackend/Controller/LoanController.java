@@ -37,19 +37,18 @@ public class LoanController {
 //		return loanRepository.findById(loanId).orElse(null);
 //	}
 	
-	@PostMapping("api/applyLoan/{loan}")
-	public boolean addLoan(@PathVariable Loans loan ){
-		Long cardNo= loan.getcardNo();
-		System.out.println("carNo: "+loan.getcardNo());
+	@PostMapping("api/user/applyLoan")
+	public boolean addLoan(@RequestBody Loans loan ){
+		Long cardNo= loan.getCardNo();
+		System.out.println("carNo: "+loan.getCardNo());
 		if(debitService.checkDebitExists(cardNo))
 		{
-			if(loanService.checkUniqueCardNo(cardNo))
+			if(loanService.checkIfLoanExistsWithDebitCardNo(cardNo))
 			{
-				System.out.println(loanService.checkUniqueCardNo(cardNo));
+				System.out.println(loanService.checkIfLoanExistsWithDebitCardNo(cardNo));
 				System.out.println(debitService.checkDebitExists(cardNo)+"\ncardNo: "+cardNo);
-				System.out.println("carNo: "+loan.getcardNo());
+				System.out.println("cardNo: "+loan.getCardNo());
 				loanService.applyLoan(loan);
-				
 				System.out.println("loan applied");
 				return true;
 			}
@@ -65,6 +64,21 @@ public class LoanController {
 			System.out.print("Debit Card number doesn't exist");
 			return false;
 		}
+	}
+	
+	@SuppressWarnings("null")
+	@GetMapping("api/user/getInstallment/{loanId}")
+	public float payLoanByLoanId(@PathVariable Long loanId)
+	{
+       
+		float l=loanService.getInstallmentByLoanId(loanId);
+//		if(l==(Float) null)
+//		{
+//			System.out.println("Loan with this id doesn't exists" );
+//		return (Float) null;
+//		}
+		return l;
+		
 	}
 	
 	

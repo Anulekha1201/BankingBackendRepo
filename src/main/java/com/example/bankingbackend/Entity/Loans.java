@@ -49,12 +49,18 @@ public class Loans {
 	@Column(name = "installment")
 	private float installment;
 	
+	@Column(name = "balance_Amount")
+	private float balanceAmt;
+	
 	public Loans() {}
 
-
-	public Loans(String loanType, String firstName, String lastName, Long cardNo, Long totalLoanAmt, String tenure,
-			float interestRate, float installment) {
+	public Loans(Long loanId, String loanType,
+			@Size(min = 3, max = 10, message = "{firstname.invalid}") @NotBlank(message = "FirstName is mandatroy") String firstName,
+			@Size(min = 3, max = 10, message = "{lastname.invalid}") @NotBlank(message = "LastName is mandatroy") String lastName,
+			@Min(value = 1000000000000000L, message = "Card number should be 16 digits") @Max(value = 999999999999999L, message = "Card number should be 16 digits") Long cardNo,
+			Long totalLoanAmt, String tenure, float interestRate, float installment, float balanceAmt) {
 		super();
+		this.loanId = loanId;
 		this.loanType = loanType;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -63,15 +69,14 @@ public class Loans {
 		this.tenure = tenure;
 		this.interestRate = interestRate;
 		this.installment = installment;
+		this.balanceAmt = balanceAmt;
 	}
-
-
 
 	public Long getLoanId() {
 		return loanId;
 	}
 
-	public synchronized void setLoanId(Long loanId) {
+	public void setLoanId(Long loanId) {
 		this.loanId = loanId;
 	}
 
@@ -79,7 +84,7 @@ public class Loans {
 		return loanType;
 	}
 
-	public synchronized void setLoanType(String loanType) {
+	public void setLoanType(String loanType) {
 		this.loanType = loanType;
 	}
 
@@ -87,7 +92,7 @@ public class Loans {
 		return firstName;
 	}
 
-	public synchronized void setFirstName(String firstName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
@@ -95,15 +100,15 @@ public class Loans {
 		return lastName;
 	}
 
-	public synchronized void setLastName(String lastName) {
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	public Long getcardNo() {
+	public Long getCardNo() {
 		return cardNo;
 	}
 
-	public synchronized void setcardNo(Long cardNo) {
+	public void setCardNo(Long cardNo) {
 		this.cardNo = cardNo;
 	}
 
@@ -111,7 +116,7 @@ public class Loans {
 		return totalLoanAmt;
 	}
 
-	public synchronized void setTotalLoanAmt(Long totalLoanAmt) {
+	public void setTotalLoanAmt(Long totalLoanAmt) {
 		this.totalLoanAmt = totalLoanAmt;
 	}
 
@@ -119,7 +124,7 @@ public class Loans {
 		return tenure;
 	}
 
-	public synchronized void setTenure(String tenure) {
+	public void setTenure(String tenure) {
 		this.tenure = tenure;
 	}
 
@@ -127,7 +132,7 @@ public class Loans {
 		return interestRate;
 	}
 
-	public synchronized void setInterestRate(float interestRate) {
+	public void setInterestRate(float interestRate) {
 		this.interestRate = interestRate;
 	}
 
@@ -135,9 +140,19 @@ public class Loans {
 		return installment;
 	}
 
-	public synchronized void setInstallment(float installment) {
+	public void setInstallment(float installment) {
 		this.installment = installment;
 	}
+
+	public float getBalanceAmt() {
+		return balanceAmt;
+	}
+
+	public void setBalanceAmt(float balanceAmt) {
+		this.balanceAmt = balanceAmt;
+	}
+
+
 	
 	
 

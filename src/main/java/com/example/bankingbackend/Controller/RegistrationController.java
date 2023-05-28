@@ -40,7 +40,7 @@ public class RegistrationController {
         this.emailService = emailService;
     }
     
-    @PostMapping("/api/password")
+    @PostMapping("/api/user/password")
     public boolean updatePassword( @RequestBody PasswordRequest password) {
     	System.out.println(password.getCustomerId()+" "+password.getPassword());
 
@@ -53,7 +53,7 @@ public class RegistrationController {
       userInfoRepository.save(user);
       return true;
     }
-    @PostMapping("/api/checkCustomerId/{customerId}")
+    @PostMapping("/api/user/checkCustomerId/{customerId}")
     public boolean customeridinfo(@PathVariable String customerId) {
     	
     	
@@ -73,7 +73,7 @@ public class RegistrationController {
     		return false;
     	}
       }
-    @PostMapping("/api/register")
+    @PostMapping("/api/user/register")
     public void registerUser(@RequestBody UserInfo userInfo) {
 //    public void registerUser(@RequestBody UserInfo userInfo) {
     	customeridref=userInfo.getCustomerId();
@@ -90,7 +90,7 @@ public class RegistrationController {
     	}
     }
     
-    @PostMapping("/api/login")    	
+    @PostMapping("/api/user/login")    	
     public boolean loginUser(@RequestBody LoginForm loginForm) {
  
     	System.out.println(loginForm.getCustomerId());
@@ -109,7 +109,7 @@ public class RegistrationController {
     	return false;	
 
     }
-    @PostMapping("/api/support"	)
+    @PostMapping("/api/user/support"	)
     public boolean supportteam(@RequestBody Support support) {
     	System.out.println(support.getName());
     	emailService.sendVerificationEmailforsupport(support.getName(),support.getEmail(),support.getMessage());

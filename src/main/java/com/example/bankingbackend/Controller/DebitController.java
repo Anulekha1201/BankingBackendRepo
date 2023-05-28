@@ -35,14 +35,14 @@ public class DebitController {
         this.emailService = emailService;
     }
 
-	@PostMapping("/api/accountnocheck/{accountNo}")
+	@PostMapping("/api/user/accountnocheck/{accountNo}")
     public boolean accNoCheck(@PathVariable Long accountNo) {
     	
 		return accountService.checkAccountExists(accountNo);
 	}
 	
   //applying for a new card
-    @PostMapping("/api/applydebitcard")
+    @PostMapping("/api/user/applydebitcard")
     public boolean saveDebit(@RequestBody Debit debit) {
     	Long accountno=debit.getAccountNo();
     	Debit d=debitRepository.findByAccountNo(accountno);
@@ -57,7 +57,7 @@ public class DebitController {
     	}
     }
   //set a pin
-    @PostMapping("/api/setorresetpin")
+    @PostMapping("/api/user/setorresetpin")
     public boolean setPin(@RequestBody setresetPin setpin) {
     	Debit debit=debitRepository.findByCardNo(setpin.getCardNo());    	
       System.out.println(setpin.getPinNo());
@@ -74,7 +74,7 @@ public class DebitController {
       return true;
       }
   //blocking a debitCard
-    @PostMapping("/api/blockcard")
+    @PostMapping("/api/user/blockcard")
     public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) {
     	Debit debit=debitRepository.findByCardNo(blockcard.getCardNo());
     	System.out.println(blockcard.getCardNo());
@@ -91,7 +91,7 @@ public class DebitController {
       return true;
       }
     }
-    @PostMapping("/api/Unblockcard")
+    @PostMapping("/api/user/Unblockcard")
     
     public boolean UnblockDebitCard(@RequestBody BlockorUnBlockCard Unblockcard) {
     	Debit debit=debitRepository.findByCardNo(Unblockcard.getCardNo());

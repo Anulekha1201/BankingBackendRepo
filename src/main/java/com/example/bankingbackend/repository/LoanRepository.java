@@ -9,9 +9,10 @@ import com.example.bankingbackend.Entity.Loans;
 
 
 public interface LoanRepository extends JpaRepository<Loans, Long>{
-
-	void save(Optional<Loans> existingLoan);
 	
 	Loans findByCardNo(Long cardNo);
+	
+	Loans findByLoanId(Long loanId);
+	
 
 }

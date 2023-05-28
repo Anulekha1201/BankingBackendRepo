@@ -16,15 +16,39 @@ public class LoanService {
 		loanRepository.save(loan);	
 	}
 	
-	public boolean checkUniqueCardNo(Long cardNo)
+	public boolean checkIfLoanExistsWithDebitCardNo(Long cardNo)
 	{
-		
-		if(loanRepository.findByCardNo(cardNo) != null) {
+		if(loanRepository.findByCardNo(cardNo) == null) {
 			return true;
 		}
 		else {
 			return false;
 		}
+		
+	}
+    
+	public Loans getLoanByLoanId(Long loanId)
+	{
+		Loans l = loanRepository.findByLoanId(loanId);
+		if(l!=null)
+		{
+			return l;
+		}
+		return null;
+	}
+	
+	
+	@SuppressWarnings("null")
+	public float getInstallmentByLoanId(Long loanId)
+	{
+		Loans l = loanRepository.findByLoanId(loanId);
+		if(l!=null)
+		{
+		
+		return l.getInstallment();
+		}
+		
+		return (Float) null;
 		
 	}
 	
