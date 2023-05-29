@@ -1,22 +1,22 @@
 package com.example.bankingbackend.Controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 //import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.EmailSenderService;
-import com.example.bankingbackend.Entity.Accounts;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Service.AccountService;
-import com.example.bankingbackend.repository.AccountsRepository;
 import com.example.bankingbackend.repository.DebitRepository;
 @CrossOrigin("*")
 
@@ -34,7 +34,16 @@ public class DebitController {
 	public DebitController(EmailSenderService emailService) {
         this.emailService = emailService;
     }
-
+	
+	@GetMapping("/api/admindashboard/DebitapprovalsHistory")
+    public List<Debit> DebitapprovalsHistory()
+	{
+		List<Debit> dh= debitRepository.findAll();
+		System.out.println(dh);
+		System.out.println(dh.get(0));
+		return dh;
+	}
+	
 	@PostMapping("/api/user/accountnocheck/{accountNo}")
     public boolean accNoCheck(@PathVariable Long accountNo) {
     	
@@ -109,5 +118,14 @@ public class DebitController {
       return true;
     	
     }
+      
+//      @GetMapping("api/user/transactionHistory/{accountNo}")
+//  	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
+//  	{
+//  		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
+//  		
+//  		return th;
+//  	}
+     
     }
 }
