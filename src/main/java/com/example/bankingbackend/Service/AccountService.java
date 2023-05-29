@@ -1,9 +1,12 @@
 package com.example.bankingbackend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.bankingbackend.Entity.Accounts;
+import com.example.bankingbackend.Entity.Loans;
 import com.example.bankingbackend.repository.AccountsRepository;
 
 @Service
@@ -39,4 +42,15 @@ public class AccountService {
 	{
 		accountsRepository.save(account);		
 	}
+
+	public List<Accounts> getAllAccounts() {
+		// TODO Auto-generated method stub
+		return accountsRepository.findAll();
+	}
+
+	public Accounts addAccounts(Accounts account) {
+		// TODO Auto-generated method stub
+		return accountsRepository.save(account);
+	}
+	
 }
