@@ -38,12 +38,36 @@ public class DebitController {
 	@GetMapping("/api/admindashboard/DebitapprovalsHistory")
     public List<Debit> DebitapprovalsHistory()
 	{
-		List<Debit> dh= debitRepository.findAll();
+	
+		List<Debit> dh= debitRepository.findByStatus("Waiting for approval");
 		System.out.println(dh);
-		System.out.println(dh.get(0));
 		return dh;
 	}
+	@GetMapping("/api/admindashboard/DebitapprovedHistory")
+    public List<Debit> DebitapprovedHistory()
+	{
 	
+		List<Debit> dh1= debitRepository.findByStatus("Approved");
+		List<Debit> dh2 = debitRepository.findByStatus("Active");
+		dh1.addAll(dh2);
+		System.out.println(dh1);
+		return dh1;
+	}
+	
+	@PostMapping("/api/admindashboard/updatestatus/{cardNo}")
+	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
+    	Debit da=debitRepository.findByCardNo(cardNo);
+    	System.out.println(cardNo+" "+da.getStatus());
+    	if(da==null) {
+    		return false;
+    	}
+    	else {
+    		da.setStatus("Approved");
+    		debitRepository.save(da);
+    		return true;
+    	}
+		
+	}
 	@PostMapping("/api/user/accountnocheck/{accountNo}")
     public boolean accNoCheck(@PathVariable Long accountNo) {
     	
@@ -54,6 +78,7 @@ public class DebitController {
     @PostMapping("/api/user/applydebitcard")
     public boolean saveDebit(@RequestBody Debit debit) {
     	Long accountno=debit.getAccountNo();
+    	System.out.println(debit.getStatus());
     	Debit d=debitRepository.findByAccountNo(accountno);
     	System.out.println(accountno+" "+d);
     	if(d==null) {
@@ -69,19 +94,27 @@ public class DebitController {
     @PostMapping("/api/user/setorresetpin")
     public boolean setPin(@RequestBody setresetPin setpin) {
     	Debit debit=debitRepository.findByCardNo(setpin.getCardNo());    	
-      System.out.println(setpin.getPinNo());
-      if (debit== null) {
-        return false;
-      }
-      debit.setPinNo(setpin.getPinNo());
-      debit.setStatus(setpin.getStatus());
-      System.out.println(debit.getPinNo()+" "+debit.getStatus());
-      debitRepository.save(debit);
-      emailService.sendVerificationEmailforsetpin(debit.getEmailId(), debit.getCardNo(),debit.getPinNo());
-      System.out.println("Mail Send..");
-      
-      return true;
-      }
+      System.out.println(setpin.getPinNo()+"-"+debit.getStatus()+"-");
+//      if (debit== null) {
+//		return false;
+//      } 
+//      else {
+//		
+//      }
+      if(debit == null || debit.getStatus().equals("Waiting for approval")) {
+    	  System.out.println(setpin.getPinNo()+" "+debit.getStatus());
+    	  return false;
+    	  }
+      else {
+    	  debit.setPinNo(setpin.getPinNo());
+    	  debit.setStatus(setpin.getStatus());
+    	  System.out.println(debit.getPinNo()+" "+debit.getStatus());
+    	  debitRepository.save(debit);
+    	  emailService.sendVerificationEmailforsetpin(debit.getEmailId(), debit.getCardNo(),debit.getPinNo());
+    	  System.out.println("Mail Send..");
+    	  return true;
+    	  }
+    }
   //blocking a debitCard
     @PostMapping("/api/user/blockcard")
     public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) {
