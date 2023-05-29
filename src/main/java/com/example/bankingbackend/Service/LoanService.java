@@ -13,6 +13,7 @@ public class LoanService {
 	
 	public void applyLoan(Loans loan)
 	{
+		loan.setStatus("Waiting for approval");
 		loanRepository.save(loan);	
 	}
 	

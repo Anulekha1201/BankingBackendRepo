@@ -1,15 +1,21 @@
 package com.example.bankingbackend.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Loans;
 import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
+import com.example.bankingbackend.repository.LoanRepository;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/")
@@ -20,6 +26,9 @@ public class LoanController {
 	
 	@Autowired
 	public DebitService debitService;
+	
+	@Autowired 
+	public LoanRepository loanrepository;
 //	@GetMapping("/getloans")
 //	public List<Loans> getLoans(){
 //		return loanRepository.findAll();
@@ -30,6 +39,36 @@ public class LoanController {
 //		return loanRepository.findById(loanId).orElse(null);
 //	}
 //	
+	@GetMapping("/api/admindashboard/LoanapprovalsHistory")
+	public List<Loans> LoanapprovalsHistory() {
+
+		List<Loans> dh = loanrepository.findByStatus("Waiting for approval");
+		System.out.println(dh);
+		return dh;
+	}
+
+	@GetMapping("/api/admindashboard/LoanapprovedHistory")
+	public List<Loans> DebitapprovedHistory() {
+
+		List<Loans> dh = loanrepository.findByStatus("Approved");
+		
+		System.out.println(dh);
+		return dh;
+	}
+
+	@PostMapping("/api/admindashboard/updateLoanstatus/{cardNo}")
+	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
+		Loans da = loanrepository.findByCardNo(cardNo);
+		System.out.println(cardNo + " " + da.getStatus());
+		if (da == null) {
+			return false;
+		} else {
+			da.setStatus("Approved");
+			loanrepository.save(da);
+			return true;
+		}
+
+	}
 	@PostMapping("api/user/applyLoan")
 	public boolean addLoan(@RequestBody Loans loan ){
 		Long cardNo= loan.getCardNo();
