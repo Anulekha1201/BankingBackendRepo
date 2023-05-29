@@ -5,6 +5,7 @@ public class LoginForm {
 	    private String customerId;
 	    private String emailId;
 	    private String password;
+	    
 		public synchronized String getCustomerId() {
 			return customerId;
 		}
