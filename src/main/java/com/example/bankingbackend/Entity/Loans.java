@@ -52,13 +52,16 @@ public class Loans {
 	@Column(name = "balance_Amount")
 	private float balanceAmt;
 	
+	@Column(name="status")
+	private String status;
+	
 	public Loans() {}
 
 	public Loans(Long loanId, String loanType,
 			@Size(min = 3, max = 15, message = "{firstname.invalid}") @NotBlank(message = "FirstName is mandatroy") String firstName,
 			@Size(min = 3, max = 15, message = "{lastname.invalid}") @NotBlank(message = "LastName is mandatroy") String lastName,
 			@Min(value = 1000000000000000L, message = "Card number should be 16 digits") @Max(value = 999999999999999L, message = "Card number should be 16 digits") Long cardNo,
-			Long totalLoanAmt, String tenure, float interestRate, float installment, float balanceAmt) {
+			Long totalLoanAmt, String tenure, float interestRate, float installment, float balanceAmt,String status) {
 		super();
 		this.loanId = loanId;
 		this.loanType = loanType;
@@ -70,6 +73,7 @@ public class Loans {
 		this.interestRate = interestRate;
 		this.installment = installment;
 		this.balanceAmt = balanceAmt;
+		this.status=status;
 	}
 
 	public Long getLoanId() {
@@ -150,6 +154,14 @@ public class Loans {
 
 	public void setBalanceAmt(float balanceAmt) {
 		this.balanceAmt = balanceAmt;
+	}
+
+	public synchronized String getStatus() {
+		return status;
+	}
+
+	public synchronized void setStatus(String status) {
+		this.status = status;
 	}
 
 
