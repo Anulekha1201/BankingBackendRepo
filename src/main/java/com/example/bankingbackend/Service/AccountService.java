@@ -59,12 +59,11 @@ public class AccountService {
 	
 	public Accounts updateAccount(long id, Accounts account) {
 		Accounts acc = accountsRepository.findById(id).get();
-
-		acc.setCustomerId(account.getCustomerId());
-		acc.setAccountNo(account.getAccountNo());
-		acc.setAccountType(account.getAccountType());
-		acc.setFirstName(account.getFirstName());
-		acc.setLastName(account.getLastName());
+//		acc.setCustomerId(account.getCustomerId());
+//		acc.setAccountNo(account.getAccountNo());
+//		acc.setAccountType(account.getAccountType());
+//		acc.setFirstName(account.getFirstName());
+//		acc.setLastName(account.getLastName());
 		acc.setEmailId(account.getEmailId());
 		acc.setMobileNumber(account.getMobileNumber());
 		acc.setAddress(account.getAddress());
@@ -89,7 +88,7 @@ public class AccountService {
 	
 	public void deleteAccount(long id)  {
 		
-		Optional<Accounts> account = accountsRepository.findById(id);
+//		Optional<Accounts> account = accountsRepository.findById(id);
 //		if(account.isEmpty())
 //			throw new RecordNotFoundException("id not found");
 		 accountsRepository.deleteById(id);
