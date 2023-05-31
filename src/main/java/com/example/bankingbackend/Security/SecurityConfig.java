@@ -43,7 +43,7 @@ public class SecurityConfig {
 		return http.csrf().disable().authorizeHttpRequests()
 				.requestMatchers(
 						"/api/admindashboard/DebitapprovedHistory","/api/admindashboard/updatestatus/{cardNo}", "/api/admindashboard",
-						"/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
+						"/api/user/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
 						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**","/api/admin/**")
 				.permitAll().anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()

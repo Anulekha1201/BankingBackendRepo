@@ -131,7 +131,7 @@ public class RegistrationController {
 //
 //	}
 
-	@PostMapping("/login")
+	@PostMapping("/api/user/login")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(

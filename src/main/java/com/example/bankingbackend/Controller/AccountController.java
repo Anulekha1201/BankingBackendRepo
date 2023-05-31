@@ -15,7 +15,7 @@ import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.LoanService;
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/")
+
 public class AccountController {
 	
 	@Autowired
@@ -31,4 +31,6 @@ public class AccountController {
 		return accountService.addAccounts(account);
 		
 	}
+	
+	
 }
