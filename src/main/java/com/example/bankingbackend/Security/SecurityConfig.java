@@ -41,8 +41,8 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
-				.requestMatchers(
-						"/api/admindashboard/DebitapprovedHistory","/api/admindashboard/updatestatus/{cardNo}", "/api/admindashboard",
+				.requestMatchers("/api/admin/getAccountById/{id}",
+						"/api/user/getAccountById/{id}","/api/admindashboard/DebitapprovedHistory","/api/admindashboard/updatestatus/{cardNo}", "/api/admindashboard",
 						"/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
 						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**","/api/admin/**")
 				.permitAll().anyRequest().authenticated().and().exceptionHandling()

@@ -20,7 +20,7 @@ import com.example.bankingbackend.Service.LoanService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/")
+
 public class AccountController {
 	
 	@Autowired
@@ -42,12 +42,19 @@ public class AccountController {
 		return accountService.updateAccount(id,account);
 	}
 	
-	@GetMapping("api/admin/getAccountById/{id}")
+	@GetMapping("/api/admin/getAccountById/{id}")
     public Optional<Accounts> getAccountById(long id)  {
 		
 		Optional<Accounts> account = accountService.getAccountById(id);
 		return account;
-    }	
+    }
+	
+	@GetMapping("api/user/getAccountById/{id}")
+    public Optional<Accounts> getUserAccountById(long id)  {
+		
+		Optional<Accounts> account = accountService.getAccountById(id);
+		return account;
+    }
 	
 	@DeleteMapping("api/admin/deleteAccount/{id}")
 	public void deleteAccountById(long id) {
