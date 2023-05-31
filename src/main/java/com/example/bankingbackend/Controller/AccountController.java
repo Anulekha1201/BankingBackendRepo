@@ -42,8 +42,8 @@ public class AccountController {
 		return accountService.updateAccount(id,account);
 	}
 	
-	@GetMapping("/api/admin/getAccountById/{id}")
-    public Optional<Accounts> getAccountById(long id)  {
+	@GetMapping("api/admin/getAccountById/{id}")
+    public Optional<Accounts> getAccountById(@PathVariable long id)  {
 		
 		Optional<Accounts> account = accountService.getAccountById(id);
 		return account;
@@ -57,7 +57,7 @@ public class AccountController {
     }
 	
 	@DeleteMapping("api/admin/deleteAccount/{id}")
-	public void deleteAccountById(long id) {
+	public void deleteAccountById(@PathVariable long id) {
 		accountService.deleteAccount(id);
 		
 	}
