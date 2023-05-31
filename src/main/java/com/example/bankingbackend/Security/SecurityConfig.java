@@ -41,12 +41,15 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
-//				.requestMatchers(
-//						"/api/admindashboard/DebitapprovedHistory","/api/admindashboard/updatestatus/{cardNo}", "/api/admindashboard",
-//						"/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
-//						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**","/api/admin/**","/api/admin/updateAccount","/api/admin/viewAccount")
+				.requestMatchers(
+						"/api/admindashboard/DebitapprovedHistory","/api/admindashboard/updatestatus/{cardNo}", "/api/admindashboard",
+						"/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
+						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**",
+				"/api/admin/**")
+//						,"api/admin/updateAccount/{id}","/api/admin/viewAccount","api/user/register","/login", "/api/user/password",
+//				"api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}")
 //				.permitAll()
-				.requestMatchers("api/admin/updateAccount/{id}","api/user/register","/login", "/api/user/password","/api/admindashboard/**","/api/admin/**","api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}")
+//				.requestMatchers("api/admin/updateAccount/{id}","api/user/register","/login", "/api/user/password","/api/admindashboard/**","/api/admin/**","api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}")
 				.permitAll().anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
