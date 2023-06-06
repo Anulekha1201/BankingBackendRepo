@@ -26,7 +26,7 @@ public class AccountController {
 	@Autowired
 	public AccountService accountService;
 
-	@GetMapping("api/admin/accounts")
+	@GetMapping("/api/admin/accounts")
 	public List<Accounts> getAllAccounts() {
 		return accountService.getAllAccounts();
 	}
@@ -42,17 +42,17 @@ public class AccountController {
 		return accountService.updateAccount(id,account);
 	}
 	
-	@GetMapping("api/admin/getAccountById/{id}")
-    public Optional<Accounts> getAccountById(@PathVariable long id)  {
+	@GetMapping("/api/admin/getAccountById/{customerId}")
+    public List<Accounts> getAccountById(@PathVariable String custid)  {
 		
-		Optional<Accounts> account = accountService.getAccountById(id);
+		List<Accounts> account = accountService.getAccountByCustomerId(custid);
 		return account;
     }
 	
-	@GetMapping("api/user/getAccountById/{id}")
-    public Optional<Accounts> getUserAccountById(long id)  {
+	@GetMapping("/api/user/getAccountById/{customerId}")
+    public List<Accounts> getUserAccountById(@PathVariable String customerId)  {
 		
-		Optional<Accounts> account = accountService.getAccountById(id);
+		List<Accounts> account = accountService.getAccountByCustomerId(customerId);
 		return account;
     }
 	

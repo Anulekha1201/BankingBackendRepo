@@ -77,9 +77,9 @@ public class AccountService {
 		return updatedAccount;
 	}
 	
-	public Optional<Accounts> getAccountById(long id)  {
+	public List<Accounts> getAccountByCustomerId(String customerId)  {
 		
-		Optional<Accounts> account = accountsRepository.findById(id);
+		List<Accounts> account = accountsRepository.findByCustomerId(customerId);
 //		if (account.isEmpty())
 //			throw new RecordNotFoundException("Account not found with this id: " + id);
 		return account;
