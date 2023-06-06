@@ -1,24 +1,26 @@
 package com.example.bankingbackend.Controller;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.bankingbackend.Entity.Loans;
 
 import com.example.bankingbackend.Entity.Accounts;
+import com.example.bankingbackend.Entity.Loans;
 import com.example.bankingbackend.Entity.TransactionHistory;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.LoanService;
 import com.example.bankingbackend.Service.TransactionHistoryService;
-import com.example.bankingbackend.repository.TransactionHistoryRepository;
 
 @CrossOrigin("*")
 @RestController
@@ -47,7 +49,14 @@ public class TransactionController {
 			account.setBalance(account.getBalance()+amount);
 			accountService.saveAccounts(account);
 			System.out.println("Deposited : "+amount);
-			TransactionHistory t = new TransactionHistory(null, accountNo, "Deposit", amount, accountNo, "success", null);
+			long timestamp = System.currentTimeMillis();
+	        Date date = new Date(timestamp);
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        String sqlDate = dateFormat.format(date);
+//			LocalDateTime currentDateTime = LocalDateTime.now();
+//	        Timestamp sqlDate = Timestamp.valueOf(currentDateTime);
+//	        System.out.println(sqlDate);
+			TransactionHistory t = new TransactionHistory(null, accountNo, "Deposit", amount, accountNo, "success", sqlDate);
 			transactionHistoryService.addTransactionHistory(t);
 			return true;
 		}
@@ -77,7 +86,16 @@ public class TransactionController {
 				account.setBalance(account.getBalance()-amount);
 				accountService.saveAccounts(account);
 				System.out.println("Withdrawn : "+amount);
-				TransactionHistory t = new TransactionHistory(null, accountNo, "WithDrawal", amount, accountNo, "success", null);
+//				LocalDate currentDate = LocalDate.now();
+//		        Date sqlDate = Date.valueOf(currentDate);
+//				LocalDateTime currentDateTime = LocalDateTime.now();
+//		        Timestamp sqlDate = Timestamp.valueOf(currentDateTime);
+				long timestamp = System.currentTimeMillis();
+		        Date date = new Date(timestamp);
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		        String sqlDate = dateFormat.format(date);
+		        System.out.println(sqlDate);
+				TransactionHistory t = new TransactionHistory(null, accountNo, "WithDrawal", amount, accountNo, "success",sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				
 				return true;
@@ -114,7 +132,14 @@ public class TransactionController {
 				accountService.saveAccounts(accountTo);
 				accountService.saveAccounts(accountFrom);
 				System.out.println("Transfered : "+amount);
-				TransactionHistory t = new TransactionHistory(null, accountNoFrom, "Transfer", amount, accountNoTo, "success", null);
+//				LocalDateTime currentDateTime = LocalDateTime.now();
+//		        Timestamp sqlDate = Timestamp.valueOf(currentDateTime);
+				long timestamp = System.currentTimeMillis();
+		        Date date = new Date(timestamp);
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		        String sqlDate = dateFormat.format(date);
+		        System.out.println(sqlDate);
+				TransactionHistory t = new TransactionHistory(null, accountNoFrom, "Transfer", amount, accountNoTo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				
 				return true;
@@ -127,7 +152,7 @@ public class TransactionController {
 	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
 	{
 		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
-		
+//		System.out.println(th.get(1).getCreatedDate());
 		return th;
 	}
 	
@@ -160,7 +185,15 @@ public class TransactionController {
 
 				account.setBalance(account.getBalance()-l);
 				accountService.saveAccounts(account);
-				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", null);
+//				LocalDateTime currentDateTime = LocalDateTime.now();
+//		        Timestamp sqlDate = Timestamp.valueOf(currentDateTime);
+				long timestamp = System.currentTimeMillis();
+		        Date date = new Date(timestamp);
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		        String sqlDate = dateFormat.format(date);
+		        
+		        System.out.println(sqlDate);
+				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
 				loanService.applyLoan(loan);
