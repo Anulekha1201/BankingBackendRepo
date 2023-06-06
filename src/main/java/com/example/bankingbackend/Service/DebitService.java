@@ -20,6 +20,11 @@ public class DebitService {
 		return d;
     }
 	
+	public Debit getDebitDetailsByAccNo(Long accountNo) {
+		Debit d = debitRepository.findByAccountNo(accountNo);
+		return d;
+    }
+	
 	public boolean checkDebitExists(Long cardNo)
 	{
 		if(debitRepository.findByCardNo(cardNo)!= null)

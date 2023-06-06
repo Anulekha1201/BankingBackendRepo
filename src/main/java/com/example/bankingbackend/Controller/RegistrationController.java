@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import com.example.bankingbackend.Entity.Support;
 import com.example.bankingbackend.Entity.UserInfo;
 import com.example.bankingbackend.Security.JwtService;
 import com.example.bankingbackend.Security.UserInfoDetailsService;
+import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.repository.AccountsRepository;
 import com.example.bankingbackend.repository.DebitRepository;
 import com.example.bankingbackend.repository.UserInfoRepository;
@@ -50,6 +52,9 @@ public class RegistrationController {
 
 	@Autowired
 	private AccountsRepository accountsRepository;
+	
+	@Autowired
+	private AccountService accountService;
 
 	@Autowired
 	private PasswordEncoder encoder;
@@ -150,7 +155,15 @@ public class RegistrationController {
 		System.out.println(token);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
-
+	
+	@GetMapping("/api/user/login/{emailId}")
+	public List<Accounts> getAccountDetails(@PathVariable String emailId) {
+		List<Accounts> account = accountService.getAccountByEmailId(emailId);
+		for(int i=0;i<account.size();i++)
+			System.out.println(account.get(i));
+		return account;
+	}
+	
 	@PostMapping("/api/user/support")
 	public boolean supportteam(@RequestBody Support support) {
 		System.out.println(support.getName());

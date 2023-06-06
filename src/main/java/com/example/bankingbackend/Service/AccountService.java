@@ -86,6 +86,13 @@ public class AccountService {
 			 
 	}
 	
+	public List<Accounts> getAccountByEmailId(String emailId) {
+		List<Accounts> account = accountsRepository.findByEmailId(emailId);
+		
+		return account;
+		
+	}
+	
 	public void deleteAccount(long id)  {
 		
 //		Optional<Accounts> account = accountsRepository.findById(id);

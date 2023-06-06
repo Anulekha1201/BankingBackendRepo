@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.Entity.Accounts;
+import com.example.bankingbackend.Entity.Debit;
+import com.example.bankingbackend.Entity.Loans;
 import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
 
 @CrossOrigin("*")
@@ -25,7 +28,13 @@ public class AccountController {
 	
 	@Autowired
 	public AccountService accountService;
-
+	
+	@Autowired
+	public DebitService debitService;
+	
+	@Autowired
+	public LoanService loanService;
+	
 	@GetMapping("/api/admin/accounts")
 	public List<Accounts> getAllAccounts() {
 		return accountService.getAllAccounts();
@@ -55,6 +64,23 @@ public class AccountController {
 		List<Accounts> account = accountService.getAccountByCustomerId(customerId);
 		return account;
     }
+	
+	@GetMapping("/api/user/login/getDebitDetails/{accountNo}")
+    public Debit getDebitDetails(@PathVariable Long accountNo)  {
+		
+		Debit debit = debitService.getDebitDetailsByAccNo(accountNo);
+		System.out.println(debit);
+		return debit;
+    }
+	
+	@GetMapping("/api/user/login/getLoanDetails/{cardNo}")
+    public Loans getLoanDetails(@PathVariable Long cardNo)  {
+		
+		Loans loan = loanService.getLoanDetailsByCardNo(cardNo);
+		System.out.println(loan);
+		return loan;
+    }
+	
 	
 	@DeleteMapping("api/admin/deleteAccount/{id}")
 	public void deleteAccountById(@PathVariable long id) {
