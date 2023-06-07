@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
+import com.example.bankingbackend.Entity.TransactionHistory;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.TransactionHistoryService;
 import com.example.bankingbackend.repository.DebitRepository;
 
 @CrossOrigin("*")
@@ -29,6 +31,9 @@ public class DebitController {
 	private AccountService accountService;
 
 	private final EmailSenderService emailService;
+	
+	@Autowired
+	public TransactionHistoryService transactionHistoryService; 
 
 	public DebitController(EmailSenderService emailService) {
 		this.emailService = emailService;
@@ -148,14 +153,14 @@ public class DebitController {
 			return true;
 
 		}
+	}
 
 //      @GetMapping("api/user/transactionHistory/{accountNo}")
 //  	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
 //  	{
-//  		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
+//		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
 //  		
 //  		return th;
 //  	}
 
-	}
 }
