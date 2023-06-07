@@ -61,13 +61,9 @@ public class DebitController {
 	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
 		Debit da = debitRepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
-		if (da == null) {
-			return false;
-		} else {
-			da.setStatus("Approved");
-			debitRepository.save(da);
-			return true;
-		}
+		da.setStatus("Approved");
+		debitRepository.save(da);
+		return true;
 
 	}
 
