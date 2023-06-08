@@ -60,13 +60,11 @@ public class LoanController {
 	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
 		Loans da = loanrepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
-		if (da == null) {
-			return false;
-		} else {
+		
 			da.setStatus("Approved");
 			loanrepository.save(da);
 			return true;
-		}
+		
 
 	}
 	@PostMapping("api/user/applyLoan")
