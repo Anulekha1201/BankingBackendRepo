@@ -14,6 +14,7 @@ public interface AccountsRepository extends JpaRepository<Accounts,Long>{
 
 	List<Accounts> findByCustomerId(String customerId);
 	Accounts findByAccountNo(Long accountNo);
+	List<Accounts> findByEmailId(String emailId);
 //	static Optional<Accounts> findByCustomerId(String customerId) {
 //		// TODO Auto-generated method stub
 //		

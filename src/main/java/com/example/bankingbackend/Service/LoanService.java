@@ -53,5 +53,13 @@ public class LoanService {
 		
 	}
 	
-
+	public Loans getLoanDetailsByCardNo(Long cardNo)
+	{
+		Loans l = loanRepository.findByCardNo(cardNo);
+		if(l!=null)
+		{
+			return l;
+		}
+		return null;
+	}
 }

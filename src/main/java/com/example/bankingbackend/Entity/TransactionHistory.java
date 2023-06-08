@@ -1,6 +1,7 @@
 package com.example.bankingbackend.Entity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +38,7 @@ public class TransactionHistory {
 	private String transactionStatus;
 	
 	@Column(name = "Created_at")
-	private Date  createdDate;
+	private String  createdDate;
 
 	
 	
@@ -46,7 +47,7 @@ public class TransactionHistory {
 	}
 
 	public TransactionHistory(Long transaction_id, Long accountNo, String trasactionType, float amount,
-			Long to_account, String transactionStatus, Date createdDate) {
+			Long to_account, String transactionStatus, String createdDate) {
 		super();
 		this.transaction_id = transaction_id;
 		this.accountNo = accountNo;
@@ -105,11 +106,11 @@ public class TransactionHistory {
 		this.transactionStatus = transactionStatus;
 	}
 
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}	
 	
