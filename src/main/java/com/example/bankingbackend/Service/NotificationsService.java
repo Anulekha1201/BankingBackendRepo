@@ -1,5 +1,7 @@
 package com.example.bankingbackend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +22,11 @@ public class NotificationsService {
 		Notifications n = notificationsRepository.findByCardNoAndNotificationType(cardNo,notificationType);
 		return n;
     }
+	
+	public List<Notifications> getnotificationsDetailsByEmailId(String emailId) {
+		// TODO Auto-generated method stub
+		List<Notifications> n = notificationsRepository.findByEmailId(emailId);
+		return n;
+	}
+	
 }

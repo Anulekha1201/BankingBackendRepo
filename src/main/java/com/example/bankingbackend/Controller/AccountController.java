@@ -69,7 +69,7 @@ public class AccountController {
     public Debit getDebitDetails(@PathVariable Long accountNo)  {
 		
 		Debit debit = debitService.getDebitDetailsByAccNo(accountNo);
-		System.out.println(debit.getCardNo());
+		System.out.println("debit details : "+debit.getCardNo());
 		return debit;
     }
 	
