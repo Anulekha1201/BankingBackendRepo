@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
+import com.example.bankingbackend.Entity.Notifications;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.repository.DebitRepository;
 
 @CrossOrigin("*")
@@ -27,7 +29,10 @@ public class DebitController {
 
 	@Autowired
 	private AccountService accountService;
-
+	
+	@Autowired
+	private NotificationsService notificationsService;
+	
 	private final EmailSenderService emailService;
 
 	public DebitController(EmailSenderService emailService) {
@@ -57,6 +62,11 @@ public class DebitController {
 		Debit da = debitRepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
 		da.setStatus("Approved");
+		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
+		
+		
+		n.setStatus("Approved");
+		notificationsService.saveAccounts(n);
 		debitRepository.save(da);
 		return true;
 
@@ -76,6 +86,13 @@ public class DebitController {
 		Debit d = debitRepository.findByAccountNo(accountno);
 		System.out.println(accountno + " " + d);
 		if (d == null) {
+			
+			Notifications n=new Notifications();
+			n.setEmailId(debit.getEmailId());
+			n.setCardNo(debit.getCardNo());
+			n.setNotificationType("Debit Card");
+			n.setStatus("Waiting for approval");
+			notificationsService.saveAccounts(n);
 			debitRepository.save(debit);
 			return true;
 		} else {
@@ -99,6 +116,11 @@ public class DebitController {
 			System.out.println(setpin.getPinNo() + " " + debit.getStatus());
 			return false;
 		} else {
+			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+			
+			
+			n.setStatus("Active");
+			notificationsService.saveAccounts(n);
 			debit.setPinNo(setpin.getPinNo());
 			debit.setStatus(setpin.getStatus());
 			System.out.println(debit.getPinNo() + " " + debit.getStatus());
@@ -117,9 +139,14 @@ public class DebitController {
 		if (debit == null) {
 			return false;
 		} else {
+			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+			
+			
+			n.setStatus("Block");
+			notificationsService.saveAccounts(n);
 			debit.setStatus(blockcard.getStatus());
 			debitRepository.save(debit);
-
+			
 			emailService.sendVerificationEmailforBlockPin(debit.getEmailId(), debit.getCardNo());
 			System.out.println("Mail Send..");
 
@@ -135,6 +162,10 @@ public class DebitController {
 		if (debit == null) {
 			return false;
 		} else {
+			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+			
+			n.setStatus("Active");
+			notificationsService.saveAccounts(n);
 			debit.setStatus(Unblockcard.getStatus());
 			debitRepository.save(debit);
 
