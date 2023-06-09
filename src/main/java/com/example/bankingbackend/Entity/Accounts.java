@@ -52,7 +52,6 @@ public class Accounts {
 	}
 
 	
-	
 	public Accounts(String customerId, Long accountNo, String accountType, String firstName, String lastName,
 			String emailId, Long mobileNumber, String address, String state, String country, String panNumber,
 			float balance, String status) {

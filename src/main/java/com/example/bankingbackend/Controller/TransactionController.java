@@ -37,7 +37,7 @@ public class TransactionController {
     public boolean deposit(@PathVariable Long accountNo, @PathVariable Long amount) 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
-		
+		System.out.println("in meth");
 		if(!accExists)
 		{
 			System.out.println("Account doesn't exists.");
@@ -45,6 +45,7 @@ public class TransactionController {
 		}
 		else
 		{
+			
 			Accounts account= accountService.getAccWithAccNo(accountNo);
 			account.setBalance(account.getBalance()+amount);
 			accountService.saveAccounts(account);
@@ -152,7 +153,7 @@ public class TransactionController {
 	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
 	{
 		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
-//		System.out.println(th.get(1).getCreatedDate());
+		System.out.println("transaction history: "+th);
 		return th;
 	}
 	
@@ -179,26 +180,35 @@ public class TransactionController {
 	@PutMapping("api/user/payLoanTransaction/{loanId}/{accountNo}")
 	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) {
 		    float l = loanService.getInstallmentByLoanId(loanId);
+		    
+		    long timestamp = System.currentTimeMillis();
+	        Date date = new Date(timestamp);
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        String sqlDate = dateFormat.format(date);
+	        
+	        System.out.println(sqlDate);
+			
 	        
 		    Loans loan= loanService.getLoanByLoanId(loanId);
 			Accounts account= accountService.getAccWithAccNo(accountNo);
-
+			if(account.getBalance()>=l) {
 				account.setBalance(account.getBalance()-l);
 				accountService.saveAccounts(account);
-//				LocalDateTime currentDateTime = LocalDateTime.now();
-//		        Timestamp sqlDate = Timestamp.valueOf(currentDateTime);
-				long timestamp = System.currentTimeMillis();
-		        Date date = new Date(timestamp);
-		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		        String sqlDate = dateFormat.format(date);
-		        
-		        System.out.println(sqlDate);
+				
 				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
 				loanService.applyLoan(loan);
 				System.out.println("Paid loan : "+l);
 				return true;
+			}
+			else
+			{
+				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "Failed", sqlDate);
+				transactionHistoryService.addTransactionHistory(t);
+				System.out.println("Payment Unsuccessful. Insufficient balance");
+				return false;
+			}
 		
 	}
 	

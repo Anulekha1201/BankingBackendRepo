@@ -33,4 +33,12 @@ public class DebitService {
 			return false;
 	}
 	
+	public boolean checkDebitExistsWithAccNo(Long accNo)
+	{
+		if(debitRepository.findByAccountNo(accNo)!= null)
+			return true;
+		else
+			return false;
+	}
+	
 }
