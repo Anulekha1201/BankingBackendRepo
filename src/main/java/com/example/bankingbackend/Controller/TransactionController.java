@@ -1,11 +1,8 @@
 package com.example.bankingbackend.Controller;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankingbackend.Entity.Accounts;
 import com.example.bankingbackend.Entity.Loans;
 import com.example.bankingbackend.Entity.TransactionHistory;
+import com.example.bankingbackend.Exception.BadRequestException;
+import com.example.bankingbackend.Exception.ResourceNotFoundException;
+import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.LoanService;
 import com.example.bankingbackend.Service.TransactionHistoryService;
@@ -34,17 +34,19 @@ public class TransactionController {
 	private TransactionHistoryService transactionHistoryService;
 	
 	@PutMapping("/api/user/transactions/deposit/{accountNo}/{amount}")
-    public boolean deposit(@PathVariable Long accountNo, @PathVariable Long amount) 
+    public boolean deposit(@PathVariable Long accountNo, @PathVariable Long amount) throws ResourceNotFoundException 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
-		
+		System.out.println("in meth");
 		if(!accExists)
 		{
-			System.out.println("Account doesn't exists.");
-			return false;
+			//System.out.println("Account doesn't exists.");
+			//return false;
+			throw new ResourceNotFoundException("Account doesnot exists");
 		}
 		else
 		{
+			
 			Accounts account= accountService.getAccWithAccNo(accountNo);
 			account.setBalance(account.getBalance()+amount);
 			accountService.saveAccounts(account);
@@ -63,14 +65,15 @@ public class TransactionController {
 	}
 
 	@PutMapping("/api/user/transactions/withDrawal/{accountNo}/{amount}")
-    public boolean withDrawal(@PathVariable Long accountNo, @PathVariable Long amount) 
+    public boolean withDrawal(@PathVariable Long accountNo, @PathVariable Long amount) throws  ResourceNotFoundException, ValidationException
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
 		
 		if(!accExists)
 		{
-			System.out.println("Account doesn't exists.");
-			return false;
+			//System.out.println("Account doesn't exists.");
+			//return false;
+			throw new ResourceNotFoundException("Account doesnot exists");
 		}
 		else
 		{
@@ -78,8 +81,9 @@ public class TransactionController {
 			float balance = account.getBalance();
 			if(balance<amount)
 			{
-				System.out.println("Balance is lower than withdrawal amount");
-				return false;
+				//System.out.println("Balance is lower than withdrawal amount");
+				//return false;
+				throw new ValidationException("Balance is lower than withdrawal amount");
 			}
 			else
 			{
@@ -105,7 +109,7 @@ public class TransactionController {
 	}
 	
 	@PutMapping("/api/user/transactions/transfer/{accountNoFrom}/{accountNoTo}/{amount}")
-    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable Long amount) 
+    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable Long amount) throws ResourceNotFoundException, ValidationException,BadRequestException 
 	{
 		boolean accExists= accountService.checkAccountExists(accountNoFrom);
 		boolean accExists2= accountService.checkAccountExists(accountNoTo);
@@ -114,6 +118,7 @@ public class TransactionController {
 		{
 			System.out.println("Account doesn't exists."+(accExists && accExists2));
 			return false;
+			//throw new ResourceNotFoundException("Account doesn't exists."+(accExists && accExists2));
 		}
 		else
 		{
@@ -122,8 +127,9 @@ public class TransactionController {
 			float balanceFrom = accountFrom.getBalance();
 			if(balanceFrom<amount)
 			{
-				System.out.println("Insufficient balance");
-				return false;
+				//System.out.println("Insufficient balance");
+				//return false;
+				throw new BadRequestException("Insufficient Balance");
 			}
 			else
 			{
@@ -149,10 +155,10 @@ public class TransactionController {
 	}
 
 	@GetMapping("api/user/transactionHistory/{accountNo}")
-	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
+	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo) throws ResourceNotFoundException, ValidationException
 	{
 		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
-//		System.out.println(th.get(1).getCreatedDate());
+		System.out.println("transaction history: "+th);
 		return th;
 	}
 	
@@ -162,8 +168,9 @@ public class TransactionController {
 		Loans l=loanService.getLoanByLoanId(loanId);
 		if(l==null)
 		{
-			System.out.println("Loan dosn't exists with this loan id");
-			return false;
+			//System.out.println("Loan dosn't exists with this loan id");
+			//return false;
+			throw new ResourceNotFoundException("Loan doesn't exists with loan id: "+loanId);
 		}
 		return true;	
 	}
@@ -179,26 +186,35 @@ public class TransactionController {
 	@PutMapping("api/user/payLoanTransaction/{loanId}/{accountNo}")
 	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) {
 		    float l = loanService.getInstallmentByLoanId(loanId);
+		    
+		    long timestamp = System.currentTimeMillis();
+	        Date date = new Date(timestamp);
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        String sqlDate = dateFormat.format(date);
+	        
+	        System.out.println(sqlDate);
+			
 	        
 		    Loans loan= loanService.getLoanByLoanId(loanId);
 			Accounts account= accountService.getAccWithAccNo(accountNo);
-
+			if(account.getBalance()>=l) {
 				account.setBalance(account.getBalance()-l);
 				accountService.saveAccounts(account);
-//				LocalDateTime currentDateTime = LocalDateTime.now();
-//		        Timestamp sqlDate = Timestamp.valueOf(currentDateTime);
-				long timestamp = System.currentTimeMillis();
-		        Date date = new Date(timestamp);
-		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		        String sqlDate = dateFormat.format(date);
-		        
-		        System.out.println(sqlDate);
+				
 				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
 				loanService.applyLoan(loan);
 				System.out.println("Paid loan : "+l);
 				return true;
+			}
+			else
+			{
+				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "Failed", sqlDate);
+				transactionHistoryService.addTransactionHistory(t);
+				System.out.println("Payment Unsuccessful. Insufficient balance");
+				return false;
+			}
 		
 	}
 	
