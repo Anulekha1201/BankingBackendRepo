@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Loans;
 import com.example.bankingbackend.Exception.BadRequestException;
 import com.example.bankingbackend.Exception.ResourceNotFoundException;
+import com.example.bankingbackend.Entity.Notifications;
 import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
+import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.repository.LoanRepository;
 
 @CrossOrigin("*")
@@ -31,17 +34,19 @@ public class LoanController {
 
 	@Autowired
 	public LoanRepository loanrepository;
-
-//    @GetMapping("/getloans")
-//    public List<Loans> getLoans(){
-//        return loanRepository.findAll();
-//    }
-//    
-//    @GetMapping("/getloan/{loanId}")
-//    public Loans getLoanById(@PathVariable Long loanId) {
-//        return loanRepository.findById(loanId).orElse(null);
-//    }
-//    
+	
+	@Autowired
+	private NotificationsService notificationsService;
+//	@GetMapping("/getloans")
+//	public List<Loans> getLoans(){
+//		return loanRepository.findAll();
+//	}
+//	
+//	@GetMapping("/getloan/{loanId}")
+//	public Loans getLoanById(@PathVariable Long loanId) {
+//		return loanRepository.findById(loanId).orElse(null);
+//	}
+//	
 	@GetMapping("/api/admindashboard/LoanapprovalsHistory")
 	public List<Loans> LoanapprovalsHistory() {
 		List<Loans> dh = loanrepository.findByStatus("Waiting for approval");
@@ -60,9 +65,18 @@ public class LoanController {
 	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
 		Loans da = loanrepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
-			da.setStatus("Approved");
-			loanrepository.save(da);
-			return true;
+		
+		Debit d=debitService.getDebitDetails(cardNo);
+		System.out.println(d.getEmailId());
+		
+		Notifications n=notificationsService.getnotificationsDetails(cardNo,"Loan");
+		
+		n.setStatus("Approved");
+		notificationsService.saveAccounts(n);
+		
+		da.setStatus("Approved");
+		loanrepository.save(da);
+		return true;
 
 	}
 
@@ -73,8 +87,19 @@ public class LoanController {
 		if (debitService.checkDebitExists(cardNo)) {
 			if (loanService.checkIfLoanExistsWithDebitCardNo(cardNo)) {
 				System.out.println(loanService.checkIfLoanExistsWithDebitCardNo(cardNo));
-				System.out.println(debitService.checkDebitExists(cardNo) + "\ncardNo: " + cardNo);
-				System.out.println("cardNo: " + loan.getCardNo());
+				System.out.println(debitService.checkDebitExists(cardNo)+"\ncardNo: "+cardNo);
+				System.out.println("cardNo: "+loan.getCardNo());
+				
+				Debit d=debitService.getDebitDetails(cardNo);
+				
+				Notifications n=new Notifications();
+				n.setEmailId(d.getEmailId());
+				n.setCardNo(d.getCardNo());
+				
+				n.setNotificationType("Loan");
+				n.setStatus("Waiting for approval");
+				notificationsService.saveAccounts(n);
+				
 				loanService.applyLoan(loan);
 				System.out.println("loan applied");
 				return true;

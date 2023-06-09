@@ -14,11 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
+
+import com.example.bankingbackend.Entity.Notifications;
+import com.example.bankingbackend.Entity.setresetPin;
+import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.NotificationsService;
+
+import com.example.bankingbackend.Entity.TransactionHistory;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Exception.BadRequestException;
 import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.TransactionHistoryService;
+
 import com.example.bankingbackend.repository.DebitRepository;
 
 @CrossOrigin("*")
@@ -30,7 +38,10 @@ public class DebitController {
 
 	@Autowired
 	private AccountService accountService;
-
+	
+	@Autowired
+	private NotificationsService notificationsService;
+	
 	private final EmailSenderService emailService;
 	
 	@Autowired
@@ -62,6 +73,12 @@ public class DebitController {
 	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
 		Debit da = debitRepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
+
+		
+		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
+		
+		n.setStatus("Approved");
+		notificationsService.saveAccounts(n);
 		
 			da.setStatus("Approved");
 			debitRepository.save(da);
@@ -83,6 +100,13 @@ public class DebitController {
 		Debit d = debitRepository.findByAccountNo(accountno);
 		System.out.println(accountno + " " + d);
 		if (d == null) {
+			
+			Notifications n=new Notifications();
+			n.setEmailId(debit.getEmailId());
+			n.setCardNo(debit.getCardNo());
+			n.setNotificationType("Debit Card");
+			n.setStatus("Waiting for approval");
+			notificationsService.saveAccounts(n);
 			debitRepository.save(debit);
 			return true;
 		} else {
@@ -108,6 +132,11 @@ public class DebitController {
 			//return false;
 			throw new ValidationException("Waiting for approval");
 		} else {
+			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+			
+			
+			n.setStatus("Active");
+			notificationsService.saveAccounts(n);
 			debit.setPinNo(setpin.getPinNo());
 			debit.setStatus(setpin.getStatus());
 			System.out.println(debit.getPinNo() + " " + debit.getStatus());
@@ -126,9 +155,14 @@ public class DebitController {
 		if (debit == null) {
 			throw new BadRequestException("Debit card number must not be null please Enter the correct Debit card number");
 		} else {
+			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+			
+			
+			n.setStatus("Block");
+			notificationsService.saveAccounts(n);
 			debit.setStatus(blockcard.getStatus());
 			debitRepository.save(debit);
-
+			
 			emailService.sendVerificationEmailforBlockPin(debit.getEmailId(), debit.getCardNo());
 			System.out.println("Mail Send..");
 
@@ -145,6 +179,10 @@ public class DebitController {
 			//return false;
 			throw new BadRequestException("Debit card number must not be null please, Enter the correct Debit card number");
 		} else {
+			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+			
+			n.setStatus("Active");
+			notificationsService.saveAccounts(n);
 			debit.setStatus(Unblockcard.getStatus());
 			debitRepository.save(debit);
 
