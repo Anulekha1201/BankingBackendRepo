@@ -21,10 +21,11 @@ import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.Accounts;
 import com.example.bankingbackend.Entity.JwtRequest;
 import com.example.bankingbackend.Entity.JwtResponse;
-import com.example.bankingbackend.Entity.LoginForm;
 import com.example.bankingbackend.Entity.PasswordRequest;
 import com.example.bankingbackend.Entity.Support;
 import com.example.bankingbackend.Entity.UserInfo;
+import com.example.bankingbackend.Exception.ResourceNotFoundException;
+import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Security.JwtService;
 import com.example.bankingbackend.Security.UserInfoDetailsService;
 import com.example.bankingbackend.Service.AccountService;
@@ -74,7 +75,8 @@ public class RegistrationController {
 		UserInfo user = userInfoRepository.findByCustomerId(password.getCustomerId());
 //      System.out.println(user);
 		if (user == null) {
-			return false;
+			//return false;
+			throw new ResourceNotFoundException("Cannot find this customer");
 		}
 		user.setpassword(encoder.encode(password.getPassword()));
 		userInfoRepository.save(user);
@@ -82,12 +84,13 @@ public class RegistrationController {
 	}
 
 	@PostMapping("/api/user/checkCustomerId/{customerId}")
-	public boolean customeridinfo(@PathVariable String customerId) {
+	public boolean customeridinfo(@PathVariable String customerId) throws ResourceNotFoundException , ValidationException{
 
 		List<Accounts> custid = accountsRepository.findByCustomerId(customerId);
 
 		if (custid.isEmpty()) {
-			return false;
+			//return false;
+			throw new ResourceNotFoundException("Customer Id cannot be empty");
 		} else {
 			for (int i = 0; i < custid.size(); i++) {
 
@@ -96,7 +99,8 @@ public class RegistrationController {
 					return true;
 				}
 			}
-			return false;
+			//return false;
+			throw new ValidationException("This account with customer id"+ customerId +"is not active");
 		}
 	}
 
@@ -141,6 +145,7 @@ public class RegistrationController {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getEmailId(), authenticationRequest.getPassword()));
+			System.out.println("in login meth");
 		} catch (UsernameNotFoundException e) {
 //			LOGGER.error("User not found", e);
 			return ResponseEntity.badRequest().body("User not found");

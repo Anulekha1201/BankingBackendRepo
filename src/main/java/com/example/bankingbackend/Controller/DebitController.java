@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
-import com.example.bankingbackend.Entity.TransactionHistory;
 import com.example.bankingbackend.Entity.setresetPin;
+import com.example.bankingbackend.Exception.BadRequestException;
+import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.TransactionHistoryService;
 import com.example.bankingbackend.repository.DebitRepository;
@@ -75,8 +76,8 @@ public class DebitController {
 	}
 
 	// applying for a new card
-	@PostMapping("/api/user/applydebitcard")
-	public boolean saveDebit(@RequestBody Debit debit) {
+	@PostMapping("/api/user/applydebitcard") 
+	public boolean saveDebit(@RequestBody Debit debit) throws ValidationException{
 		Long accountno = debit.getAccountNo();
 		System.out.println(debit.getStatus());
 		Debit d = debitRepository.findByAccountNo(accountno);
@@ -86,13 +87,14 @@ public class DebitController {
 			return true;
 		} else {
 			System.out.println("Customer already exists");
-			return false;
+			//return false;
+			throw new ValidationException("Customer already exists");
 		}
 	}
 
 	// set a pin
 	@PostMapping("/api/user/setorresetpin")
-	public boolean setPin(@RequestBody setresetPin setpin) {
+	public boolean setPin(@RequestBody setresetPin setpin) throws ValidationException{
 		Debit debit = debitRepository.findByCardNo(setpin.getCardNo());
 		System.out.println(setpin.getPinNo() + "-" + debit.getStatus() + "-");
 //      if (debit== null) {
@@ -101,9 +103,10 @@ public class DebitController {
 //      else {
 //		
 //      }
-		if (debit == null || debit.getStatus().equals("Waiting for approval")) {
+		if (debit == null || debit.getStatus().equals("Waiting for approval")){
 			System.out.println(setpin.getPinNo() + " " + debit.getStatus());
-			return false;
+			//return false;
+			throw new ValidationException("Waiting for approval");
 		} else {
 			debit.setPinNo(setpin.getPinNo());
 			debit.setStatus(setpin.getStatus());
@@ -121,7 +124,7 @@ public class DebitController {
 		Debit debit = debitRepository.findByCardNo(blockcard.getCardNo());
 		System.out.println(blockcard.getCardNo());
 		if (debit == null) {
-			return false;
+			throw new BadRequestException("Debit card number must not be null please Enter the correct Debit card number");
 		} else {
 			debit.setStatus(blockcard.getStatus());
 			debitRepository.save(debit);
@@ -135,11 +138,12 @@ public class DebitController {
 
 	@PostMapping("/api/user/Unblockcard")
 
-	public boolean UnblockDebitCard(@RequestBody BlockorUnBlockCard Unblockcard) {
+	public boolean UnblockDebitCard(@RequestBody BlockorUnBlockCard Unblockcard) throws BadRequestException{
 		Debit debit = debitRepository.findByCardNo(Unblockcard.getCardNo());
 		System.out.println(Unblockcard.getCardNo());
 		if (debit == null) {
-			return false;
+			//return false;
+			throw new BadRequestException("Debit card number must not be null please, Enter the correct Debit card number");
 		} else {
 			debit.setStatus(Unblockcard.getStatus());
 			debitRepository.save(debit);
