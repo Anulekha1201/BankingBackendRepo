@@ -14,10 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
+
 import com.example.bankingbackend.Entity.Notifications;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.NotificationsService;
+
+import com.example.bankingbackend.Entity.TransactionHistory;
+import com.example.bankingbackend.Entity.setresetPin;
+import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.TransactionHistoryService;
+
 import com.example.bankingbackend.repository.DebitRepository;
 
 @CrossOrigin("*")
@@ -34,6 +41,9 @@ public class DebitController {
 	private NotificationsService notificationsService;
 	
 	private final EmailSenderService emailService;
+	
+	@Autowired
+	public TransactionHistoryService transactionHistoryService; 
 
 	public DebitController(EmailSenderService emailService) {
 		this.emailService = emailService;
@@ -61,14 +71,16 @@ public class DebitController {
 	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
 		Debit da = debitRepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
-		da.setStatus("Approved");
-		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
+
 		
+		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
 		
 		n.setStatus("Approved");
 		notificationsService.saveAccounts(n);
-		debitRepository.save(da);
-		return true;
+		
+			da.setStatus("Approved");
+			debitRepository.save(da);
+			return true;
 
 	}
 
@@ -175,14 +187,14 @@ public class DebitController {
 			return true;
 
 		}
+	}
 
 //      @GetMapping("api/user/transactionHistory/{accountNo}")
 //  	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
 //  	{
-//  		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
+//		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
 //  		
 //  		return th;
 //  	}
 
-	}
 }
