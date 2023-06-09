@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.bankingbackend.Entity.Loans;
+import com.example.bankingbackend.Exception.ResourceNotFoundException;
 import com.example.bankingbackend.repository.LoanRepository;
 
 @Service
@@ -16,41 +17,37 @@ public class LoanService {
 		loan.setStatus("Waiting for approval");
 		loanRepository.save(loan);	
 	}
-	
-	public boolean checkIfLoanExistsWithDebitCardNo(Long cardNo)
-	{
-		if(loanRepository.findByCardNo(cardNo) == null) {
+
+	public boolean checkIfLoanExistsWithDebitCardNo(Long cardNo) throws ResourceNotFoundException {
+		if (loanRepository.findByCardNo(cardNo) == null) {
 			return true;
+		} else {
+			throw new ResourceNotFoundException("The loan doesn't exsists with this card number");
 		}
-		else {
-			return false;
-		}
-		
+
 	}
-    
-	public Loans getLoanByLoanId(Long loanId)
-	{
+
+	public Loans getLoanByLoanId(Long loanId)throws ResourceNotFoundException {
 		Loans l = loanRepository.findByLoanId(loanId);
-		if(l!=null)
-		{
+		if (l != null) {
 			return l;
+		} else {
+			throw new ResourceNotFoundException("Loan for loan id: "+loanId+" doesn't exists");
+			//return null;
 		}
-		return null;
+
 	}
-	
-	
+
 	@SuppressWarnings("null")
-	public float getInstallmentByLoanId(Long loanId)
-	{
+	public float getInstallmentByLoanId(Long loanId) {
 		Loans l = loanRepository.findByLoanId(loanId);
-		if(l!=null)
-		{
-		
-		return l.getInstallment();
+		if (l != null) {
+
+			return l.getInstallment();
 		}
-		
-		return (Float) null;
-		
+		throw new ResourceNotFoundException("The installments for this loan id doesn't exists");
+		//return (Float) null;
+
 	}
 	
 	public Loans getLoanDetailsByCardNo(Long cardNo)

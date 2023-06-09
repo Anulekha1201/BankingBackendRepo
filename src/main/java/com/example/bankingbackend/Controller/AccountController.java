@@ -58,12 +58,12 @@ public class AccountController {
 		return account;
     }
 	
-	@GetMapping("/api/user/getAccountById/{customerId}")
-    public List<Accounts> getUserAccountById(@PathVariable String customerId)  {
-		
-		List<Accounts> account = accountService.getAccountByCustomerId(customerId);
-		return account;
-    }
+//	@GetMapping("/api/user/getAccountById/{customerId}")
+//    public List<Accounts> getUserAccountById(@PathVariable String customerId)  {
+//		
+//		List<Accounts> account = accountService.getAccountByCustomerId(customerId);
+//		return account;
+//    }
 	
 	@GetMapping("/api/user/login/getDebitDetails/{accountNo}")
     public Debit getDebitDetails(@PathVariable Long accountNo)  {
