@@ -3,7 +3,9 @@ package com.example.bankingbackend.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,13 +13,16 @@ import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Credit;
 import com.example.bankingbackend.Entity.Debit;
+import com.example.bankingbackend.Entity.Notifications;
+import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Exception.BadRequestException;
+import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.CreditService;
 import com.example.bankingbackend.repository.CreditRepository;
 
 import jakarta.validation.ValidationException;
-
+@CrossOrigin("*")
 @RestController
 public class CreditController {
 	
@@ -28,8 +33,13 @@ public class CreditController {
 	public CreditService cs;
 	
 	@Autowired
+	private AccountService accountService;
+	
+	@Autowired
 	public CreditRepository creditrepository;
 	
+	@Autowired
+	private NotificationsService notificationsService;
 
 	public CreditController(EmailSenderService emailService) {
 		this.emailService = emailService;
@@ -58,6 +68,30 @@ public class CreditController {
 		System.out.println(ch1);
 		return ch1;
 		
+	}
+	
+	@PostMapping("/api/admindashboard/creditupdatestatus/{cardNo}")
+	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
+		Credit da = creditrepository.findByCardNo(cardNo);
+		System.out.println(cardNo + " " + da.getStatus());
+
+		
+		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Credit Card");
+		
+		n.setStatus("Approved");
+		notificationsService.saveAccounts(n);
+		
+			da.setStatus("Approved");
+			creditrepository.save(da);
+			return true;
+
+	}
+
+	
+	@PostMapping("/api/user/creditaccountnocheck/{accountNo}")
+	public boolean accNoCheck(@PathVariable Long accountNo) {
+
+		return accountService.checkAccountExists(accountNo);
 	}
 	
 	@PostMapping("/api/user/applycreditcard")
