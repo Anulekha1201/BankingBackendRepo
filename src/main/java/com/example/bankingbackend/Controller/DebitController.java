@@ -153,8 +153,14 @@ public class DebitController {
 		Debit debit = debitRepository.findByCardNo(blockcard.getCardNo());
 		System.out.println(blockcard.getCardNo());
 		if (debit == null) {
-			throw new BadRequestException("Debit card number must not be null please Enter the correct Debit card number");
-		} else {
+			throw new BadRequestException("Debit card with given card number doesn't exists");
+		} 
+		else if(debit.getCvv()!=blockcard.getCvv() || debit.getPinNo() != blockcard.getPinNo())
+			throw new BadRequestException("Invalid Pin or CVV");
+		else if(debit.getStatus()!="Active") {
+			throw new BadRequestException("Debit card with given card number is already blocked");
+		}
+		else {
 			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
 			
 			
