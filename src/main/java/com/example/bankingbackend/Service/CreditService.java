@@ -17,10 +17,13 @@ public class CreditService {
     public CreditService(CreditRepository creditRepository) {
         this.creditRepository = creditRepository;
     }
-
+    
+    
     public boolean checkAccountExists(Long accountNo) {
-        Credit credit = creditRepository.findByAccountNo(accountNo);
-        return credit != null;
+        if(creditRepository.findByAccountNo(accountNo)!=null)
+           return true;
+        else 
+           return false;
     }
 
     public List<Credit> getcredit(){

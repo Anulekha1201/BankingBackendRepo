@@ -51,7 +51,8 @@ public class SecurityConfig {
 						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**",
 				"/api/admin/**","/getcredit","/api/user/unblockcreditcard","/api/user/blockcreditcard","/api/user/setorresetpinforcredit","/api/user/blockcard"
 						,"api/admin/updateAccount/{id}","/api/admin/viewAccount","api/user/register","/login", "/api/user/password",
-				"api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","api/admin/updateAccount/{id}","api/user/register","/login", "/api/user/password","/api/admindashboard/**","/api/admin/**","api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}")
+				"api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","api/admin/updateAccount/{id}","api/user/register","/login", "/api/user/password","/api/admindashboard/**","/api/admin/**","api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","/api/user/creditaccountnocheck/{accountNo}"
+				,"/api/admindashboard/CreditApprovedHisory","/api/admindashboard/CreditapprovalsHistory")
 
 				.permitAll().anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
