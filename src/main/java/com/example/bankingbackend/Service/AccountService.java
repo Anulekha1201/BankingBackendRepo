@@ -20,8 +20,8 @@ public class AccountService {
 	public boolean checkAccountExists(Long accountNo) throws ResourceNotFoundException, ValidationException {
 		Accounts accno = accountsRepository.findByAccountNo(accountNo);
 		if (accno == null) {
-			// System.out.println("Account doesn't exist");
-			// return false;
+			 System.out.println("Account doesn't exist");
+			 //return true;
 			throw new ResourceNotFoundException("Account doesn't exists");
 		} else {
 			if (accno.getStatus().equals("Active")) {
@@ -55,11 +55,6 @@ public class AccountService {
 
 	public Accounts updateAccount(long id, Accounts account) {
 		Accounts acc = accountsRepository.findById(id).get();
-//		acc.setCustomerId(account.getCustomerId());
-//		acc.setAccountNo(account.getAccountNo());
-//		acc.setAccountType(account.getAccountType());
-//		acc.setFirstName(account.getFirstName());
-//		acc.setLastName(account.getLastName());
 		acc.setEmailId(account.getEmailId());
 		acc.setMobileNumber(account.getMobileNumber());
 		acc.setAddress(account.getAddress());
