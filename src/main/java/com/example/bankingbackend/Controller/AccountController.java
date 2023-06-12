@@ -51,12 +51,20 @@ public class AccountController {
 		return accountService.updateAccount(id,account);
 	}
 	
-	@GetMapping("/api/admin/getAccountById/{customerId}")
-    public List<Accounts> getAccountById(@PathVariable String custid)  {
+	@GetMapping("/api/admin/getAccountByCustomerId/{customerId}")
+    public List<Accounts> getAccountByCustomerId(@PathVariable String custid)  {
 		
 		List<Accounts> account = accountService.getAccountByCustomerId(custid);
 		return account;
     }
+	
+	@GetMapping("/api/admin/getAccountById/{id}")
+    public List<Accounts> getAccountById(@PathVariable Long id)  {
+		
+		List<Accounts> account = accountService.getAccountById(id);
+		return account;
+    }
+	
 	
 //	@GetMapping("/api/user/getAccountById/{customerId}")
 //    public List<Accounts> getUserAccountById(@PathVariable String customerId)  {

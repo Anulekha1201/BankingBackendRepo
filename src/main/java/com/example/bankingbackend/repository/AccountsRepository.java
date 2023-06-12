@@ -19,5 +19,6 @@ public interface AccountsRepository extends JpaRepository<Accounts,Long>{
 //		// TODO Auto-generated method stub
 //		
 //	}
+	List<Accounts> findAllById(Long id);
 }
 

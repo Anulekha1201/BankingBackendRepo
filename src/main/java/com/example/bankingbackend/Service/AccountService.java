@@ -76,6 +76,13 @@ public class AccountService {
 		return account;
 
 	}
+	
+//	public List<Accounts> getAccountById(Long id) {
+//		List<Accounts> account = accountsRepository.findAllById(id);
+//		if (account.isEmpty())
+//			throw new ResourceNotFoundException("Account not found with this id: " + id);
+//		return account;
+//	}
 
 	public List<Accounts> getAccountByEmailId(String emailId) {
 		List<Accounts> account = accountsRepository.findByEmailId(emailId);
@@ -91,6 +98,14 @@ public class AccountService {
 			throw new ResourceNotFoundException("id not found");
 		accountsRepository.deleteById(id);
 
+	}
+
+	public List<Accounts> getAccountById(Long id) {
+		// TODO Auto-generated method stub
+		List<Accounts> account = accountsRepository.findAllById(id);
+		if (account.isEmpty())
+			throw new ResourceNotFoundException("Account not found with this id: " + id);
+		return account;
 	}
 
 }
