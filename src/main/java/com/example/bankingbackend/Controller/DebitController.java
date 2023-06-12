@@ -14,19 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Debit;
-
 import com.example.bankingbackend.Entity.Notifications;
-import com.example.bankingbackend.Entity.setresetPin;
-import com.example.bankingbackend.Service.AccountService;
-import com.example.bankingbackend.Service.NotificationsService;
-
-import com.example.bankingbackend.Entity.TransactionHistory;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Exception.BadRequestException;
 import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.DebitService;
+import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.Service.TransactionHistoryService;
-
 import com.example.bankingbackend.repository.DebitRepository;
 
 @CrossOrigin("*")
@@ -36,6 +31,9 @@ public class DebitController {
 	@Autowired
 	private DebitRepository debitRepository;
 
+	@Autowired
+	private DebitService debitService;
+	
 	@Autowired
 	private AccountService accountService;
 	
@@ -53,17 +51,18 @@ public class DebitController {
 
 	@GetMapping("/api/admindashboard/DebitapprovalsHistory")
 	public List<Debit> DebitapprovalsHistory() {
-
-		List<Debit> dh = debitRepository.findByStatus("Waiting for approval");
+		List<Debit> dh =debitService.getDetailsbyStatus("Waiting for approval");
+		//List<Debit> dh = debitRepository.findByStatus("Waiting for approval");
 		System.out.println(dh);
 		return dh;
 	}
 
 	@GetMapping("/api/admindashboard/DebitapprovedHistory")
 	public List<Debit> DebitapprovedHistory() {
-
-		List<Debit> dh1 = debitRepository.findByStatus("Approved");
-		List<Debit> dh2 = debitRepository.findByStatus("Active");
+		List<Debit> dh1 =debitService.getDetailsbyStatus("Approved");
+		List<Debit> dh2 =debitService.getDetailsbyStatus("Active");
+		//List<Debit> dh1 = debitRepository.findByStatus("Approved");
+		//List<Debit> dh2 = debitRepository.findByStatus("Active");
 		dh1.addAll(dh2);
 		System.out.println(dh1);
 		return dh1;
@@ -71,7 +70,8 @@ public class DebitController {
 
 	@PostMapping("/api/admindashboard/updatestatus/{cardNo}")
 	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
-		Debit da = debitRepository.findByCardNo(cardNo);
+		Debit da =debitService.getDebitDetails(cardNo);
+		//Debit da = debitRepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
 
 		
@@ -81,7 +81,8 @@ public class DebitController {
 		notificationsService.saveAccounts(n);
 		
 			da.setStatus("Approved");
-			debitRepository.save(da);
+			debitService.addDetails(da);
+//			debitRepository.save(da);
 			return true;
 
 	}
@@ -97,7 +98,8 @@ public class DebitController {
 	public boolean saveDebit(@RequestBody Debit debit) throws ValidationException{
 		Long accountno = debit.getAccountNo();
 		System.out.println(debit.getStatus());
-		Debit d = debitRepository.findByAccountNo(accountno);
+		Debit d= debitService.getDebitDetailsByAccNo(accountno);
+		//Debit d = debitRepository.findByAccountNo(accountno);
 		System.out.println(accountno + " " + d);
 		if (d == null) {
 			
@@ -107,7 +109,8 @@ public class DebitController {
 			n.setNotificationType("Debit Card");
 			n.setStatus("Waiting for approval");
 			notificationsService.saveAccounts(n);
-			debitRepository.save(debit);
+			debitService.addDetails(debit);
+//			debitRepository.save(debit);
 			return true;
 		} else {
 			System.out.println("Customer already exists");
@@ -119,7 +122,8 @@ public class DebitController {
 	// set a pin
 	@PostMapping("/api/user/setorresetpin")
 	public boolean setPin(@RequestBody setresetPin setpin) throws ValidationException{
-		Debit debit = debitRepository.findByCardNo(setpin.getCardNo());
+		Debit debit=debitService.getDebitDetails(setpin.getCardNo());
+		//Debit debit = debitRepository.findByCardNo(setpin.getCardNo());
 		System.out.println(setpin.getPinNo() + "-" + debit.getStatus() + "-");
 //      if (debit== null) {
 //		return false;
@@ -140,7 +144,8 @@ public class DebitController {
 			debit.setPinNo(setpin.getPinNo());
 			debit.setStatus(setpin.getStatus());
 			System.out.println(debit.getPinNo() + " " + debit.getStatus());
-			debitRepository.save(debit);
+			debitService.addDetails(debit);
+			//debitRepository.save(debit);
 			emailService.sendVerificationEmailforsetpin(debit.getEmailId(), debit.getCardNo(), debit.getPinNo());
 			System.out.println("Mail Send..");
 			return true;
@@ -150,7 +155,8 @@ public class DebitController {
 	// blocking a debitCard
 	@PostMapping("/api/user/blockcard")
 	public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) {
-		Debit debit = debitRepository.findByCardNo(blockcard.getCardNo());
+		Debit debit=debitService.getDebitDetails(blockcard.getCardNo());
+		//Debit debit = debitRepository.findByCardNo(blockcard.getCardNo());
 		System.out.println(blockcard.getCardNo());
 		if (debit == null) {
 			throw new BadRequestException("Debit card with given card number doesn't exists");
@@ -167,7 +173,8 @@ public class DebitController {
 			n.setStatus("Block");
 			notificationsService.saveAccounts(n);
 			debit.setStatus(blockcard.getStatus());
-			debitRepository.save(debit);
+			debitService.addDetails(debit);
+			//debitRepository.save(debit);
 			
 			emailService.sendVerificationEmailforBlockPin(debit.getEmailId(), debit.getCardNo());
 			System.out.println("Mail Send..");
@@ -179,7 +186,8 @@ public class DebitController {
 	@PostMapping("/api/user/Unblockcard")
 
 	public boolean UnblockDebitCard(@RequestBody BlockorUnBlockCard Unblockcard) throws BadRequestException{
-		Debit debit = debitRepository.findByCardNo(Unblockcard.getCardNo());
+		Debit debit=debitService.getDebitDetails(Unblockcard.getCardNo());
+		//Debit debit = debitRepository.findByCardNo(Unblockcard.getCardNo());
 		System.out.println(Unblockcard.getCardNo());
 		if (debit == null) {
 			//return false;
@@ -190,7 +198,8 @@ public class DebitController {
 			n.setStatus("Active");
 			notificationsService.saveAccounts(n);
 			debit.setStatus(Unblockcard.getStatus());
-			debitRepository.save(debit);
+			debitService.addDetails(debit);
+			//debitRepository.save(debit);
 
 			emailService.sendVerificationEmailforUnBlockPin(debit.getEmailId(), debit.getCardNo());
 			System.out.println("Mail Send..");

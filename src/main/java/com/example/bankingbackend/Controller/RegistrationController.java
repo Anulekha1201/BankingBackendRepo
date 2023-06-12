@@ -29,6 +29,7 @@ import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Security.JwtService;
 import com.example.bankingbackend.Security.UserInfoDetailsService;
 import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.UserInfoService;
 import com.example.bankingbackend.repository.AccountsRepository;
 import com.example.bankingbackend.repository.DebitRepository;
 import com.example.bankingbackend.repository.UserInfoRepository;
@@ -48,6 +49,9 @@ public class RegistrationController {
 	@Autowired
 	private UserInfoRepository userInfoRepository;
 
+	@Autowired
+	private UserInfoService userInfoService;
+	
 	@Autowired
 	private DebitRepository DebitRepository;
 
@@ -71,22 +75,24 @@ public class RegistrationController {
 	@PostMapping("/api/user/password")
 	public boolean updatePassword(@RequestBody PasswordRequest password) {
 		System.out.println(password.getCustomerId() + " " + password.getPassword());
-
-		UserInfo user = userInfoRepository.findByCustomerId(password.getCustomerId());
+		
+		UserInfo user=userInfoService.getdetailsbycustid(password.getCustomerId());
+		//UserInfo user = userInfoRepository.findByCustomerId(password.getCustomerId());
 //      System.out.println(user);
 		if (user == null) {
 			//return false;
 			throw new ResourceNotFoundException("Cannot find this customer");
 		}
 		user.setpassword(encoder.encode(password.getPassword()));
-		userInfoRepository.save(user);
+		userInfoService.addDetails(user);
+//		userInfoRepository.save(user);
 		return true;
 	}
 
 	@PostMapping("/api/user/checkCustomerId/{customerId}")
 	public boolean customeridinfo(@PathVariable String customerId) throws ResourceNotFoundException , ValidationException{
-
-		List<Accounts> custid = accountsRepository.findByCustomerId(customerId);
+		List<Accounts> custid=accountService.getAccountByCustomerId(customerId);
+		//List<Accounts> custid = accountsRepository.findByCustomerId(customerId);
 
 		if (custid.isEmpty()) {
 			//return false;
@@ -108,10 +114,11 @@ public class RegistrationController {
 	public void registerUser(@RequestBody UserInfo userInfo) {
 //    public void registerUser(@RequestBody UserInfo userInfo) {
 		customeridref = userInfo.getCustomerId();
-
-		UserInfo user = userInfoRepository.findByCustomerId(customeridref);
+		UserInfo user= userInfoService.getdetailsbycustid(customeridref);
+		//UserInfo user = userInfoRepository.findByCustomerId(customeridref);
 		if (user == null) {
-			userInfoRepository.save(userInfo);
+			userInfoService.addDetails(userInfo);
+			//userInfoRepository.save(userInfo);
 			String verificationLink = "http://localhost:3000/user/passwordset";
 			emailService.sendVerificationEmail(userInfo.getEmailId(), verificationLink);
 			System.out.println("Mail Send..");

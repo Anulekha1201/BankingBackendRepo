@@ -49,21 +49,24 @@ public class LoanController {
 //	
 	@GetMapping("/api/admindashboard/LoanapprovalsHistory")
 	public List<Loans> LoanapprovalsHistory() {
-		List<Loans> dh = loanrepository.findByStatus("Waiting for approval");
+		List<Loans> dh=loanService.getdetailsbystatus("Waiting for approval");
+		//List<Loans> dh = loanrepository.findByStatus("Waiting for approval");
 		System.out.println(dh);
 		return dh;
 	}
 
 	@GetMapping("/api/admindashboard/LoanapprovedHistory")
 	public List<Loans> DebitapprovedHistory() {
-		List<Loans> dh = loanrepository.findByStatus("Approved");
+		List<Loans> dh=loanService.getdetailsbystatus("Approved");
+		//List<Loans> dh = loanrepository.findByStatus("Approved");
 		System.out.println(dh);
 		return dh;
 	}
 
 	@PostMapping("/api/admindashboard/updateLoanstatus/{cardNo}")
 	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
-		Loans da = loanrepository.findByCardNo(cardNo);
+		Loans da=loanService.getLoanDetailsByCardNo(cardNo);
+		//Loans da = loanrepository.findByCardNo(cardNo);
 		System.out.println(cardNo + " " + da.getStatus());
 		
 		Debit d=debitService.getDebitDetails(cardNo);
@@ -75,7 +78,8 @@ public class LoanController {
 		notificationsService.saveAccounts(n);
 		
 		da.setStatus("Approved");
-		loanrepository.save(da);
+		loanService.addDetails(da);
+//		loanrepository.save(da);
 		return true;
 
 	}
