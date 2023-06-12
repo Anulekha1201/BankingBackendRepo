@@ -14,14 +14,7 @@ public class CreditService {
 	@Autowired
     private CreditRepository creditRepository;
     
-//    public boolean checkCreditExistsWithAccNo(Long accountNo) {
-//        if(creditRepository.findByAccountNo(accountNo)!=null)
-//           return true;
-//        else 
-//           return false;
-//    }
-
-    public Credit getCreditDetailsByAccNo(Long accountNo){
+	public Credit getCreditDetailsByAccNo(Long accountNo){
     	return creditRepository.findByAccountNo(accountNo);
     }
 
@@ -39,5 +32,4 @@ public class CreditService {
 		// TODO Auto-generated method stub
 		creditRepository.save(da);
 	}
-
 }

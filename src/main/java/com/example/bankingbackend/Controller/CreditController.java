@@ -35,9 +35,6 @@ public class CreditController {
 	@Autowired
 	private AccountService accountService;
 	
-//	@Autowired
-//	public CreditRepository creditrepository;
-	
 	@Autowired
 	private NotificationsService notificationsService;
 
@@ -60,8 +57,6 @@ public class CreditController {
 		List<Credit> ch1 = cs.getDetailsByStatus("Approved");
 		List<Credit> ch2 = cs.getDetailsByStatus("Active");
 		List<Credit> ch3 = cs.getDetailsByStatus("Block");
-		//List<Credit> ch1 = creditrepository.findByStatus("Approved");
-		//List<Credit> ch2 = creditrepository.findByStatus("Active");
 		ch1.addAll(ch2);
 		ch1.addAll(ch3);
 		System.out.println(ch1);
@@ -74,10 +69,6 @@ public class CreditController {
 		
 		
 		Credit da=cs.getDetailsBycardNo(cardNo);
-		//Credit da = creditrepository.findByCardNo(cardNo);
-//		System.out.println(cardNo + " " + da.getStatus());
-
-		
 		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Credit Card");
 		
 		n.setStatus("Approved");

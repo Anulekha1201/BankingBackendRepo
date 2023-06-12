@@ -60,12 +60,15 @@ public class Credit {
 	@Column(name = "credit_amount")
 	private Long creditAmount;
 	
+	@Column(name = "credit_balance")
+	private Long creditBalance;
+	
 	private String status;
 	
 	public Credit() { super();}
 
 	public Credit(Long cardNo, Long accountNo, String emailId, String firstName, String lastName, Long mobileNumber,
-			Long pinNo, Long cvv, String validFrom, String validUpto, Long income, Long creditAmount, String status) {
+			Long pinNo, Long cvv, String validFrom, String validUpto, Long income, Long creditAmount, String status, Long balance) {
 		super();
 		this.cardNo = cardNo;
 		this.accountNo = accountNo;
@@ -80,6 +83,7 @@ public class Credit {
 		this.income = income;
 		this.creditAmount = creditAmount;
 		this.status = status;
+		this.creditBalance = balance;
 	}
 
 	public synchronized Long getId() {
@@ -94,7 +98,7 @@ public class Credit {
 		return cardNo;
 	}
 
-	public synchronized void setCardNum(Long cardNo) {
+	public synchronized void setCardNo(Long cardNo) {
 		this.cardNo = cardNo;
 	}
 
@@ -184,6 +188,14 @@ public class Credit {
 
 	public synchronized void setCreditAmount(Long creditAmount) {
 		this.creditAmount = creditAmount;
+	}
+
+	public Long getCreditBalance() {
+		return creditBalance;
+	}
+
+	public void setCreditBalance(Long creditBalance) {
+		this.creditBalance = creditBalance;
 	}
 
 	public synchronized String getStatus() {
