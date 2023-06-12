@@ -52,6 +52,16 @@ public class EmailSenderService {
         mailSender.send(message);
     }
 
+	public void sendforgetpasswordEmail(String emailId, String verificationLink) {
+		// TODO Auto-generated method stub
+		SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailId);
+        message.setSubject("Email Verification");
+        message.setText("Please click the following link to Reset password: " + verificationLink);
+        mailSender.send(message);
+		
+	}
+
 }
 //
 //import java.io.File;
