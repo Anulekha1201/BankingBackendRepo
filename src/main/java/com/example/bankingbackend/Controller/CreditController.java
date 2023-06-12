@@ -93,7 +93,7 @@ public class CreditController {
 	}
 	
 	@PostMapping("/api/user/applycreditcard")
-	public boolean saveCredit(@RequestBody Credit credit) {
+	public boolean saveCredit(@RequestBody Credit credit) throws ValidationException{
 		Long accountNo = credit.getAccountNo();
 		System.out.println(credit.getStatus());
 		Credit cr=cs.getCreditDetailsByAccNo(accountNo);
@@ -119,7 +119,7 @@ public class CreditController {
 		}
 	}
 	@PostMapping("/api/user/setorresetpinforcredit")
-	public boolean setPin(@RequestBody setresetPin setPin) {
+	public boolean setPin(@RequestBody setresetPin setPin) throws ValidationException{
 		Credit credit = cs.getDetailsBycardNo(setPin.getCardNo());
 		//Credit credit = creditrepository.findByCardNo(setPin.getCardNo());
 		if( credit == null || credit.getStatus().equals("Waiting for approval..")) {
@@ -152,6 +152,11 @@ public class CreditController {
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
 		}
+		else if(credit.getCvv()!=blockCard.getCvv() || credit.getPinNo() != blockCard.getPinNo())
+			throw new BadRequestException("Invalid Pin or CVV");
+		else if(credit.getStatus()!="Active") {
+			throw new BadRequestException("Credit card with given card number is already blocked");
+		}
 		else {
 			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
 			
@@ -174,12 +179,17 @@ public class CreditController {
 	}
 	
 	@PostMapping("/api/user/unblockcreditcard")
-	public boolean UnblockCreditCard(@RequestBody BlockorUnBlockCard unblockcard) {
+	public boolean UnblockCreditCard(@RequestBody BlockorUnBlockCard unblockcard)throws BadRequestException {
 		Credit credit = cs.getDetailsBycardNo(unblockcard.getCardNo());
 		//Credit credit = creditrepository.findByCardNo(unblockcard.getCardNo());
 		System.out.println(unblockcard.getCardNo());
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
+		}
+		else if(credit.getCvv()!=unblockcard.getCvv() || credit.getPinNo() != unblockcard.getPinNo())
+			throw new BadRequestException("Invalid Pin or CVV");
+		else if(credit.getStatus()!="Block") {
+			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
 			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");

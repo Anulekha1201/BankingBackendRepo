@@ -42,8 +42,8 @@ public class DebitController {
 	
 	private final EmailSenderService emailService;
 	
-	@Autowired
-	public TransactionHistoryService transactionHistoryService; 
+//	@Autowired
+//	public TransactionHistoryService transactionHistoryService; 
 
 	public DebitController(EmailSenderService emailService) {
 		this.emailService = emailService;
@@ -157,7 +157,7 @@ public class DebitController {
 
 	// blocking a debitCard
 	@PostMapping("/api/user/blockcard")
-	public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) {
+	public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) throws BadRequestException{
 		Debit debit=debitService.getDebitDetails(blockcard.getCardNo());
 		//Debit debit = debitRepository.findByCardNo(blockcard.getCardNo());
 		System.out.println(blockcard.getCardNo());
@@ -192,10 +192,16 @@ public class DebitController {
 		Debit debit=debitService.getDebitDetails(Unblockcard.getCardNo());
 		//Debit debit = debitRepository.findByCardNo(Unblockcard.getCardNo());
 		System.out.println(Unblockcard.getCardNo());
+
 		if (debit == null) {
 			//return false;
 			throw new BadRequestException("Debit card number must not be null please, Enter the correct Debit card number");
-		} else {
+		}
+		else if(debit.getCvv()!=Unblockcard.getCvv() || debit.getPinNo() != Unblockcard.getPinNo())
+			throw new BadRequestException("Invalid Pin or CVV");
+		else if(debit.getStatus()!="Block") {
+			throw new BadRequestException("Debit card with given card number is already Active");
+		}else {
 			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
 			
 			n.setStatus("Active");
