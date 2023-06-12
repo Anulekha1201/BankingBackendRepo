@@ -22,8 +22,6 @@ public class NotificationsController {
 	@Autowired
 	private NotificationsService notificationsService;
 	
-	@Autowired
-	  private NotificationsRepository notificationsRepository;
 	
 	
 //	  @GetMapping("/api/user/notifications")

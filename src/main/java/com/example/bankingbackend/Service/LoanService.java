@@ -1,5 +1,7 @@
 package com.example.bankingbackend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +60,15 @@ public class LoanService {
 			return l;
 		}
 		return null;
+	}
+
+	public List<Loans> getdetailsbystatus(String status) {
+		// TODO Auto-generated method stub
+		return loanRepository.findByStatus(status);
+	}
+
+	public void addDetails(Loans da) {
+		// TODO Auto-generated method stub
+		loanRepository.save(da);
 	}
 }
