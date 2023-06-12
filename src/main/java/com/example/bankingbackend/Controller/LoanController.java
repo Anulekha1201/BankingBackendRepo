@@ -32,21 +32,9 @@ public class LoanController {
 	@Autowired
 	public DebitService debitService;
 
-//	@Autowired
-//	public LoanRepository loanrepository;
-//	
 	@Autowired
 	private NotificationsService notificationsService;
-//	@GetMapping("/getloans")
-//	public List<Loans> getLoans(){
-//		return loanRepository.findAll();
-//	}
-//	
-//	@GetMapping("/getloan/{loanId}")
-//	public Loans getLoanById(@PathVariable Long loanId) {
-//		return loanRepository.findById(loanId).orElse(null);
-//	}
-//	
+	
 	@GetMapping("/api/admindashboard/LoanapprovalsHistory")
 	public List<Loans> LoanapprovalsHistory() {
 		List<Loans> dh=loanService.getdetailsbystatus("Waiting for approval");
