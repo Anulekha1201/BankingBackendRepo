@@ -92,10 +92,11 @@ public class CreditController {
 
 	
 	@PostMapping("/api/user/creditaccountnocheck/{accountNo}")
-	public boolean accNoCheck(@PathVariable Long accountNo) {
+	public boolean accNoCheck(@PathVariable Long accountNo) throws ValidationException{
 
 		if(cs.getCreditDetailsByAccNo(accountNo) != null) {
-			return false;
+			throw new ValidationException("This account already exists"); 
+			//return false;
 		}
 			return true;
 		
@@ -145,6 +146,7 @@ public class CreditController {
 			credit.setStatus(setPin.getStatus());
 			System.out.println(credit.getPinNo()+" "+ credit.getStatus());
 			cs.addDetails(credit);
+			
 			//creditrepository.save(credit);
 			emailService.sendVerificationEmailforsetpin(credit.getEmailId(), credit.getCardNo(), credit.getPinNo());
 			System.out.println("Mail Sent..");
