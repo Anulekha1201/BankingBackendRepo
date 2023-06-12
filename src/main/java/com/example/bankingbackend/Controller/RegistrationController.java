@@ -109,6 +109,15 @@ public class RegistrationController {
 			throw new ValidationException("This account with customer id"+ customerId +"is not active");
 		}
 	}
+	
+	@PostMapping("/api/user/forgotpassword")
+	public void forgetpasswordofuser(@RequestBody JwtRequest userInfo) {
+
+		String verificationLink = "http://localhost:3000/user/passwordset";
+		emailService.sendforgetpasswordEmail(userInfo.getEmailId(), verificationLink);
+		System.out.println("Mail Send..");
+		
+	}
 
 	@PostMapping("/api/user/register")
 	public void registerUser(@RequestBody UserInfo userInfo) {
