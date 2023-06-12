@@ -46,18 +46,18 @@ public class RegistrationController {
 
 	@Autowired
 	private UserInfoDetailsService userDetailsService;
-	@Autowired
-	private UserInfoRepository userInfoRepository;
+//	@Autowired
+//	private UserInfoRepository userInfoRepository;
 
 	@Autowired
 	private UserInfoService userInfoService;
 	
-	@Autowired
-	private DebitRepository DebitRepository;
+//	@Autowired
+//	private DebitRepository DebitRepository;
 
-	@Autowired
-	private AccountsRepository accountsRepository;
-	
+//	@Autowired
+//	private AccountsRepository accountsRepository;
+//	
 	@Autowired
 	private AccountService accountService;
 

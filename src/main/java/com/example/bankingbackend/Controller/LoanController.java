@@ -32,9 +32,9 @@ public class LoanController {
 	@Autowired
 	public DebitService debitService;
 
-	@Autowired
-	public LoanRepository loanrepository;
-	
+//	@Autowired
+//	public LoanRepository loanrepository;
+//	
 	@Autowired
 	private NotificationsService notificationsService;
 //	@GetMapping("/getloans")

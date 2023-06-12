@@ -28,8 +28,8 @@ import com.example.bankingbackend.repository.DebitRepository;
 @RestController
 public class DebitController {
 
-	@Autowired
-	private DebitRepository debitRepository;
+//	@Autowired
+//	private DebitRepository debitRepository;
 
 	@Autowired
 	private DebitService debitService;
@@ -61,6 +61,7 @@ public class DebitController {
 	public List<Debit> DebitapprovedHistory() {
 		List<Debit> dh1 =debitService.getDetailsbyStatus("Approved");
 		List<Debit> dh2 =debitService.getDetailsbyStatus("Active");
+		
 		//List<Debit> dh1 = debitRepository.findByStatus("Approved");
 		//List<Debit> dh2 = debitRepository.findByStatus("Active");
 		dh1.addAll(dh2);
@@ -90,7 +91,8 @@ public class DebitController {
 	@PostMapping("/api/user/accountnocheck/{accountNo}")
 	public boolean accNoCheck(@PathVariable Long accountNo) {
 
-		return accountService.checkAccountExists(accountNo);
+		return debitService.checkDebitExistsWithAccNo(accountNo);
+		
 	}
 
 	// applying for a new card

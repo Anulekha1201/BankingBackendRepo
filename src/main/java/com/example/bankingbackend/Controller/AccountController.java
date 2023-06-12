@@ -84,14 +84,9 @@ public class AccountController {
 	
 	@GetMapping("/api/user/login/getCreditDetails/{accountNo}")
     public Credit getCreditDetails(@PathVariable Long accountNo)  {
-		
-		if(creditService.checkCreditExistsWithAccNo(accountNo)) 
-		{
 		Credit credit = creditService.getCreditDetailsByAccNo(accountNo);
 		System.out.println("Credit Details: "+credit.getCardNo());
-		return credit;}
-		System.out.println("out of if loop");
-		return null;
+		return credit;
     }
 	
 	@GetMapping("/api/user/login/getLoanDetails/{cardNo}")
