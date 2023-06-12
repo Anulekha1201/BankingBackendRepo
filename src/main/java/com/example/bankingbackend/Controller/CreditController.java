@@ -59,9 +59,11 @@ public class CreditController {
 		
 		List<Credit> ch1 = cs.getDetailsByStatus("Approved");
 		List<Credit> ch2 = cs.getDetailsByStatus("Active");
+		List<Credit> ch3 = cs.getDetailsByStatus("Block");
 		//List<Credit> ch1 = creditrepository.findByStatus("Approved");
 		//List<Credit> ch2 = creditrepository.findByStatus("Active");
 		ch1.addAll(ch2);
+		ch1.addAll(ch3);
 		System.out.println(ch1);
 		return ch1;
 		

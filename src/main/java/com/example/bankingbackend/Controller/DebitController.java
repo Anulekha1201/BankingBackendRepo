@@ -61,10 +61,11 @@ public class DebitController {
 	public List<Debit> DebitapprovedHistory() {
 		List<Debit> dh1 =debitService.getDetailsbyStatus("Approved");
 		List<Debit> dh2 =debitService.getDetailsbyStatus("Active");
-		
+		List<Debit> dh3 =debitService.getDetailsbyStatus("Block");
 		//List<Debit> dh1 = debitRepository.findByStatus("Approved");
 		//List<Debit> dh2 = debitRepository.findByStatus("Active");
 		dh1.addAll(dh2);
+		dh1.addAll(dh3);
 		System.out.println(dh1);
 		return dh1;
 	}
