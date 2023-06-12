@@ -45,11 +45,6 @@ public class CreditController {
 		this.emailService = emailService;
 	}
 	
-	@GetMapping("/getcredit")
-	public List<Credit> getCredit(){
-		return cs.getcredit();
-	}
-	
 	@GetMapping("/api/admindashboard/CreditapprovalsHistory")
 	public List<Credit> CreditapprovalsHistory() {
 

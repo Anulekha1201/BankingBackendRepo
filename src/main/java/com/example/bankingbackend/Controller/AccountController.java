@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.Entity.Accounts;
+import com.example.bankingbackend.Entity.Credit;
 import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Loans;
 import com.example.bankingbackend.Service.AccountService;
+import com.example.bankingbackend.Service.CreditService;
 import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
 
@@ -31,6 +33,9 @@ public class AccountController {
 	
 	@Autowired
 	public DebitService debitService;
+	
+	@Autowired
+	public CreditService creditService;
 	
 	@Autowired
 	public LoanService loanService;
@@ -73,6 +78,18 @@ public class AccountController {
 		Debit debit = debitService.getDebitDetailsByAccNo(accountNo);
 		System.out.println(debit.getCardNo());
 		return debit;}
+		System.out.println("out of if loop");
+		return null;
+    }
+	
+	@GetMapping("/api/user/login/getCreditDetails/{accountNo}")
+    public Credit getCreditDetails(@PathVariable Long accountNo)  {
+		
+		if(creditService.checkCreditExistsWithAccNo(accountNo)) 
+		{
+		Credit credit = creditService.getCreditDetailsByAccNo(accountNo);
+		System.out.println("Credit Details: "+credit.getCardNo());
+		return credit;}
 		System.out.println("out of if loop");
 		return null;
     }
