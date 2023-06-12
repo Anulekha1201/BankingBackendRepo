@@ -11,23 +11,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreditService {
 
-    private final CreditRepository creditRepository;
-
-    @Autowired
-    public CreditService(CreditRepository creditRepository) {
-        this.creditRepository = creditRepository;
-    }
+	@Autowired
+    private CreditRepository creditRepository;
     
-    
-    public boolean checkAccountExists(Long accountNo) {
+    public boolean checkCreditExistsWithAccNo(Long accountNo) {
         if(creditRepository.findByAccountNo(accountNo)!=null)
            return true;
         else 
            return false;
     }
 
-    public List<Credit> getcredit(){
-    	return creditRepository.findAll();
+    public Credit getCreditDetailsByAccNo(Long accountNo){
+    	return creditRepository.findByAccountNo(accountNo);
     }
 
 }

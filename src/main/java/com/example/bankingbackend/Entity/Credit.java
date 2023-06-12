@@ -38,7 +38,7 @@ public class Credit {
 	@Size(min = 1, max = 15, message = "{lastname.invalid}")
 	@NotBlank(message = "LastName is mandatroy")
 	@Column(name = "last_name")
-	private String LastName;
+	private String lastName;
 	
 	@Column(name = "mobile_number")
 	private Long mobileNumber;
@@ -71,7 +71,7 @@ public class Credit {
 		this.accountNo = accountNo;
 		this.emailId = emailId;
 		this.firstName = firstName;
-		LastName = lastName;
+		this.lastName = lastName;
 		this.mobileNumber = mobileNumber;
 		this.pinNo = pinNo;
 		this.cvv = cvv;
@@ -123,11 +123,11 @@ public class Credit {
 	}
 
 	public synchronized String getLastName() {
-		return LastName;
+		return lastName;
 	}
 
 	public synchronized void setLastName(String lastName) {
-		LastName = lastName;
+		this.lastName = lastName;
 	}
 
 	public synchronized Long getMobileNumber() {
