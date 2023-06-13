@@ -29,6 +29,7 @@ public class DebitService {
 	
 	public boolean checkDebitExists(Long cardNo)throws BadRequestException
 	{
+		System.out.println(debitRepository.findByCardNo(cardNo));
 		if(debitRepository.findByCardNo(cardNo)!= null)
 			
 			return true;
