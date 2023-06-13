@@ -39,22 +39,11 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.cors();
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
-				.requestMatchers("/api/user/notifications","/api/user/transactionHistory/{accountNo}",
-						"/api/admindashboard/DebitapprovedHistory","/api/admindashboard/updatestatus/{cardNo}", "/api/admindashboard",
-
-						"/api/user/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
-						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**","/api/admin/**",
-
-						"/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
-						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**",
-				"/api/admin/**","/getcredit","/api/user/unblockcreditcard","/api/user/blockcreditcard","/api/user/setorresetpinforcredit","/api/user/blockcard"
-						,"api/admin/updateAccount/{id}","/api/admin/viewAccount","api/user/register","/login", "/api/user/password",
-				"api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","api/admin/updateAccount/{id}","api/user/register","/login", "/api/user/password","/api/admindashboard/**","/api/admin/**","api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","/api/user/creditaccountnocheck/{accountNo}"
-				,"/api/admindashboard/CreditApprovedHisory","/api/admindashboard/CreditapprovalsHistory")
-
-				.permitAll().anyRequest().authenticated().and().exceptionHandling()
+				.requestMatchers("/api/user/**/","/api/user/register","/api/user/login","api/user/login/{emailId}","/api/user/applydebitcard").permitAll()
+				.anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authenticationProvider(authenticationProvider())

@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -32,15 +33,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		LOGGER.info("Checking JWT authentication for {}", request.getRequestURI());
+
+		// Check token from Authorization header
 		String authHeader = request.getHeader("Authorization");
 		String token = null;
 		String emailId = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 			emailId = jwtService.getUsernameFromToken(token);
-		} else {
-			LOGGER.error("Token Missing");
 		}
+
 		if (emailId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(emailId);
 
@@ -50,11 +52,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authToken);
 				LOGGER.info("JWT authentication successful for {}", emailId);
-
 			} else {
-				LOGGER.error("No JWT token found in request headers");
+				LOGGER.error("Invalid or expired token");
 			}
+		} else {
+			LOGGER.info("Token Missing");
 		}
+
 		filterChain.doFilter(request, response);
 	}
 }
