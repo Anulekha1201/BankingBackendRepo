@@ -32,4 +32,9 @@ public class CreditService {
 		// TODO Auto-generated method stub
 		creditRepository.save(da);
 	}
+	
+	public float getCreditBill(Long CreditNo) {
+		Credit c= creditRepository.findByCardNo(CreditNo);
+		return c.getCreditAmount()-c.getCreditBalance();
+	}
 }

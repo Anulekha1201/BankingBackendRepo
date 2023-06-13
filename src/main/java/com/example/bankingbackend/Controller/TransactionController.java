@@ -113,14 +113,14 @@ public class TransactionController {
 		}
 		else
 		{
-			float balance = c.getCreditAmount();
+			float balance = c.getCreditBalance();
 			if(balance<amount)
 			{
 				throw new ValidationException("Balance is lower than withdrawal amount");
 			}
 			else
 			{
-				c.setCreditAmount(c.getCreditAmount()-amount);
+				c.setCreditBalance(c.getCreditBalance()-amount);
 				creditService.addDetails(c);
 				System.out.println("Withdrawn : "+amount);
 				long timestamp = System.currentTimeMillis();
@@ -246,40 +246,45 @@ public class TransactionController {
 		return l;	
 	}
 	
-//	@PutMapping("api/user/payCreditBill/{creditNo}/{bill}")
-//	public boolean payCreditBill(@PathVariable Long creditNo, @PathVariable Long bill) {
-//		    Credit c = creditService.getDetailsBycardNo(creditNo);
-//		    
-//		    long timestamp = System.currentTimeMillis();
-//	        Date date = new Date(timestamp);
-//	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//	        String sqlDate = dateFormat.format(date);
-//	        
-//	        System.out.println(sqlDate);
-//			
-//	        
-//		    Loans loan= loanService.getLoanByLoanId(loanId);
-//			Accounts account= accountService.getAccWithAccNo(accountNo);
-//			if(account.getBalance()>=l) {
-//				account.setBalance(account.getBalance()-l);
-//				accountService.saveAccounts(account);
-//				
-//				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", sqlDate);
-//				transactionHistoryService.addTransactionHistory(t);
-//				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
-//				loanService.applyLoan(loan);
-//				System.out.println("Paid loan : "+l);
-//				return true;
-//			}
-//			else
-//			{
-//				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "Failed", sqlDate);
-//				transactionHistoryService.addTransactionHistory(t);
-//				System.out.println("Payment Unsuccessful. Insufficient balance");
-//				return false;
-//			}
-//		
-//	}
+	@PutMapping("api/user/payCreditBill/{creditNo}/{bill}")
+	public boolean payCreditBill(@PathVariable Long creditNo, @PathVariable Long bill) {
+		    Credit c = creditService.getDetailsBycardNo(creditNo);
+		    
+		    long timestamp = System.currentTimeMillis();
+	        Date date = new Date(timestamp);
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        String sqlDate = dateFormat.format(date);
+	        
+	        System.out.println(sqlDate);
+	        
+			Accounts account= accountService.getAccWithAccNo(c.getAccountNo());
+			if(account.getBalance()>=bill) {
+				account.setBalance(account.getBalance()-bill);
+				accountService.saveAccounts(account);
+				
+				TransactionHistory t = new TransactionHistory(null, c.getAccountNo(), "Credit bill payment", bill, c.getCardNo(), "success", sqlDate);
+				transactionHistoryService.addTransactionHistory(t);
+				c.setCreditBalance(c.getCreditAmount());
+				creditService.addDetails(c);
+				System.out.println("Paid credit bill : "+c);
+				return true;
+			}
+			else
+			{
+				TransactionHistory t = new TransactionHistory(null, c.getAccountNo(), "Credit bill payment", bill, c.getCardNo(), "Failed", sqlDate);
+				transactionHistoryService.addTransactionHistory(t);
+				System.out.println("Payment Unsuccessful. Insufficient balance");
+				return false;
+			}
+		
+	}
+	
+	@GetMapping("api/user/getCreditBill/{CreditNo}")
+	public float getCreditBill(@PathVariable Long CreditNo)
+	{
+		float c=creditService.getCreditBill(CreditNo);
+		return c;	
+	}
 	
 
 }
