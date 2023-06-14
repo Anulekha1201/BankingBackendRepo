@@ -3,26 +3,24 @@ package com.example.bankingbackend.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Credit;
-import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Notifications;
-import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Exception.BadRequestException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.CreditService;
-import com.example.bankingbackend.repository.CreditRepository;
+import com.example.bankingbackend.Service.NotificationsService;
 
 import jakarta.validation.ValidationException;
-@CrossOrigin("*")
+
 @RestController
 public class CreditController {
 	
@@ -34,9 +32,6 @@ public class CreditController {
 	
 	@Autowired
 	private AccountService accountService;
-	
-//	@Autowired
-//	public CreditRepository creditrepository;
 	
 	@Autowired
 	private NotificationsService notificationsService;
@@ -60,8 +55,6 @@ public class CreditController {
 		List<Credit> ch1 = cs.getDetailsByStatus("Approved");
 		List<Credit> ch2 = cs.getDetailsByStatus("Active");
 		List<Credit> ch3 = cs.getDetailsByStatus("Block");
-		//List<Credit> ch1 = creditrepository.findByStatus("Approved");
-		//List<Credit> ch2 = creditrepository.findByStatus("Active");
 		ch1.addAll(ch2);
 		ch1.addAll(ch3);
 		System.out.println(ch1);
@@ -74,10 +67,6 @@ public class CreditController {
 		
 		
 		Credit da=cs.getDetailsBycardNo(cardNo);
-		//Credit da = creditrepository.findByCardNo(cardNo);
-//		System.out.println(cardNo + " " + da.getStatus());
-
-		
 		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Credit Card");
 		
 		n.setStatus("Approved");
@@ -92,17 +81,18 @@ public class CreditController {
 
 	
 	@PostMapping("/api/user/creditaccountnocheck/{accountNo}")
-	public boolean accNoCheck(@PathVariable Long accountNo) {
+	public boolean accNoCheck(@PathVariable Long accountNo) throws ValidationException{
 
 		if(cs.getCreditDetailsByAccNo(accountNo) != null) {
-			return false;
+			throw new ValidationException("This account already exists"); 
+			//return false;
 		}
 			return true;
 		
 	}
 	
 	@PostMapping("/api/user/applycreditcard")
-	public boolean saveCredit(@RequestBody Credit credit) {
+	public boolean saveCredit(@RequestBody Credit credit) throws ValidationException{
 		Long accountNo = credit.getAccountNo();
 		System.out.println(credit.getStatus());
 		Credit cr=cs.getCreditDetailsByAccNo(accountNo);
@@ -128,7 +118,7 @@ public class CreditController {
 		}
 	}
 	@PostMapping("/api/user/setorresetpinforcredit")
-	public boolean setPin(@RequestBody setresetPin setPin) {
+	public boolean setPin(@RequestBody setresetPin setPin) throws ValidationException{
 		Credit credit = cs.getDetailsBycardNo(setPin.getCardNo());
 		//Credit credit = creditrepository.findByCardNo(setPin.getCardNo());
 		if( credit == null || credit.getStatus().equals("Waiting for approval..")) {
@@ -145,6 +135,7 @@ public class CreditController {
 			credit.setStatus(setPin.getStatus());
 			System.out.println(credit.getPinNo()+" "+ credit.getStatus());
 			cs.addDetails(credit);
+			
 			//creditrepository.save(credit);
 			emailService.sendVerificationEmailforsetpin(credit.getEmailId(), credit.getCardNo(), credit.getPinNo());
 			System.out.println("Mail Sent..");
@@ -160,6 +151,11 @@ public class CreditController {
 		System.out.println(blockCard.getCardNo());
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
+		}
+		else if(credit.getCvv()!=blockCard.getCvv() || credit.getPinNo() != blockCard.getPinNo())
+			throw new BadRequestException("Invalid Pin or CVV");
+		else if(credit.getStatus()!="Active") {
+			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
 			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
@@ -183,12 +179,17 @@ public class CreditController {
 	}
 	
 	@PostMapping("/api/user/unblockcreditcard")
-	public boolean UnblockCreditCard(@RequestBody BlockorUnBlockCard unblockcard) {
+	public boolean UnblockCreditCard(@RequestBody BlockorUnBlockCard unblockcard)throws BadRequestException {
 		Credit credit = cs.getDetailsBycardNo(unblockcard.getCardNo());
 		//Credit credit = creditrepository.findByCardNo(unblockcard.getCardNo());
 		System.out.println(unblockcard.getCardNo());
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
+		}
+		else if(credit.getCvv()!=unblockcard.getCvv() || credit.getPinNo() != unblockcard.getPinNo())
+			throw new BadRequestException("Invalid Pin or CVV");
+		else if(credit.getStatus()!="Block") {
+			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
 			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");

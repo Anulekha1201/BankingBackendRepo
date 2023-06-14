@@ -3,7 +3,6 @@ package com.example.bankingbackend.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,17 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Loans;
+import com.example.bankingbackend.Entity.Notifications;
 import com.example.bankingbackend.Exception.BadRequestException;
 import com.example.bankingbackend.Exception.ResourceNotFoundException;
-import com.example.bankingbackend.Entity.Notifications;
 import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
 import com.example.bankingbackend.Service.NotificationsService;
-import com.example.bankingbackend.repository.LoanRepository;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/")
 public class LoanController {
 
 	@Autowired
@@ -32,21 +28,9 @@ public class LoanController {
 	@Autowired
 	public DebitService debitService;
 
-//	@Autowired
-//	public LoanRepository loanrepository;
-//	
 	@Autowired
 	private NotificationsService notificationsService;
-//	@GetMapping("/getloans")
-//	public List<Loans> getLoans(){
-//		return loanRepository.findAll();
-//	}
-//	
-//	@GetMapping("/getloan/{loanId}")
-//	public Loans getLoanById(@PathVariable Long loanId) {
-//		return loanRepository.findById(loanId).orElse(null);
-//	}
-//	
+	
 	@GetMapping("/api/admindashboard/LoanapprovalsHistory")
 	public List<Loans> LoanapprovalsHistory() {
 		List<Loans> dh=loanService.getdetailsbystatus("Waiting for approval");

@@ -14,8 +14,6 @@ import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.repository.NotificationsRepository;
 
 
-
-@CrossOrigin("*")
 @RestController
 public class NotificationsController {
 

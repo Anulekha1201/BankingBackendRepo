@@ -42,8 +42,18 @@ public class SecurityConfig {
 		http.cors();
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
-				.requestMatchers("/api/user/**/","/api/user/register","/api/user/login","api/user/login/{emailId}","/api/user/applydebitcard").permitAll()
+
+				.requestMatchers(
+						"/api/user/register",
+						"/api/user/login",
+						"/api/user/support",
+						"api/user/login/{emailId}",
+						"/api/user/login/getDebitDetails/{accountNo}",
+						"/api/user/login/getCreditDetails/{accountNo}",
+						"/api/user/login/getLoanDetails/{cardNo}").permitAll()
+				
 				.anyRequest().authenticated().and().exceptionHandling()
+
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authenticationProvider(authenticationProvider())

@@ -1,17 +1,14 @@
 package com.example.bankingbackend.Controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.Entity.Accounts;
@@ -23,7 +20,6 @@ import com.example.bankingbackend.Service.CreditService;
 import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
 
-@CrossOrigin("*")
 @RestController
 
 public class AccountController {
@@ -56,12 +52,20 @@ public class AccountController {
 		return accountService.updateAccount(id,account);
 	}
 	
-	@GetMapping("/api/admin/getAccountById/{customerId}")
-    public List<Accounts> getAccountById(@PathVariable String custid)  {
+	@GetMapping("/api/admin/getAccountByCustomerId/{customerId}")
+    public List<Accounts> getAccountByCustomerId(@PathVariable String custid)  {
 		
 		List<Accounts> account = accountService.getAccountByCustomerId(custid);
 		return account;
     }
+	
+	@GetMapping("/api/admin/getAccountById/{id}")
+    public List<Accounts> getAccountById(@PathVariable Long id)  {
+		
+		List<Accounts> account = accountService.getAccountById(id);
+		return account;
+    }
+	
 	
 //	@GetMapping("/api/user/getAccountById/{customerId}")
 //    public List<Accounts> getUserAccountById(@PathVariable String customerId)  {

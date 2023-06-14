@@ -45,18 +45,10 @@ public class RegistrationController {
 
 	@Autowired
 	private UserInfoDetailsService userDetailsService;
-//	@Autowired
-//	private UserInfoRepository userInfoRepository;
 
 	@Autowired
 	private UserInfoService userInfoService;
 	
-//	@Autowired
-//	private DebitRepository DebitRepository;
-
-//	@Autowired
-//	private AccountsRepository accountsRepository;
-//	
 	@Autowired
 	private AccountService accountService;
 
@@ -107,6 +99,15 @@ public class RegistrationController {
 			//return false;
 			throw new ValidationException("This account with customer id"+ customerId +"is not active");
 		}
+	}
+	
+	@PostMapping("/api/user/forgotpassword")
+	public void forgetpasswordofuser(@RequestBody JwtRequest userInfo) {
+
+		String verificationLink = "http://localhost:3000/user/passwordset";
+		emailService.sendforgetpasswordEmail(userInfo.getEmailId(), verificationLink);
+		System.out.println("Mail Send..");
+		
 	}
 
 	@PostMapping("/api/user/register")

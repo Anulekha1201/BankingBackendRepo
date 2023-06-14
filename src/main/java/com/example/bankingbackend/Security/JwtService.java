@@ -48,6 +48,6 @@ public class JwtService {
 		final Claims claims = Jwts.parserBuilder().setAllowedClockSkewSeconds(360).setSigningKey(getSignKey()).build()
 				.parseClaimsJws(token).getBody();
 		return claims.getSubject();
-	
+
 	}
 }
