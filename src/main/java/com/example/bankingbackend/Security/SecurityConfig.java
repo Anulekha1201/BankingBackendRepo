@@ -41,18 +41,7 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
-				.requestMatchers("/api/user/notifications","/api/user/transactionHistory/{accountNo}",
-						"/api/admindashboard/DebitapprovedHistory","/api/admindashboard/updatestatus/{cardNo}", "/api/admindashboard",
-
-						"/api/user/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
-						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**","/api/admin/**",
-
-						"/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
-						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**",
-				"/api/admin/**","/getcredit","/api/user/unblockcreditcard","/api/user/blockcreditcard","/api/user/setorresetpinforcredit","/api/user/blockcard"
-						,"api/admin/updateAccount/{id}","/api/admin/viewAccount","api/user/register","/login", "/api/user/password",
-				"api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","api/admin/updateAccount/{id}","api/user/register","/login", "/api/user/password","/api/admindashboard/**","/api/admin/**","api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","/api/user/creditaccountnocheck/{accountNo}"
-				,"/api/admindashboard/CreditApprovedHisory","/api/admindashboard/CreditapprovalsHistory","/api/admin/getAccountById/{id}")
+				.requestMatchers("/api/user/**","/api/admindashboard/**","/api/admin/**")
 
 				.permitAll().anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
@@ -61,7 +50,7 @@ public class SecurityConfig {
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 
-	@Bean
+	@Bean	
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}

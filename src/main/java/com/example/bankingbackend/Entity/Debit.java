@@ -1,7 +1,5 @@
 package com.example.bankingbackend.Entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,17 +13,15 @@ public class Debit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name = "cvv")
 	private Long cvv;
 	@Column(name = "account_no")
 	private Long accountNo;
-	
+
 	@Column(name = "card_no")
 	private long cardNo;
-	
-	
-	
+
 	@Column(name = "email_id")
 	private String emailId;
 
@@ -33,35 +29,33 @@ public class Debit {
 	private String firstName;
 	@Column(name = "last_name")
 	private String lastName;
-	
+
 	@Column(name = "mobile_no")
 	private Long mobileNumber;
 
 	@Column(name = "pin_no")
 	private Long pinNo;
-	
+
 	@Column(name = "valid_From")
 	private String validFrom;
-	
+
 	@Column(name = "valid_Upto")
 	private String validUpto;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private String status;
+
 	public Debit() {
 
 	}
 
-	
-	
-
-	public Debit(Long cvv, Long accountNo, long cardNo, String emailId, String firstName,
-			String lastName, Long mobileNumber, Long pinNo, String validFrom, String validUpto, String status) {
+	public Debit(Long cvv, Long accountNo, long cardNo, String emailId, String firstName, String lastName,
+			Long mobileNumber, Long pinNo, String validFrom, String validUpto, String status) {
 		super();
 		this.cvv = cvv;
 		this.accountNo = accountNo;
 		this.cardNo = cardNo;
-		
+
 		this.emailId = emailId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -72,23 +66,13 @@ public class Debit {
 		this.status = status;
 	}
 
-
-
-
 	public synchronized Long getPinNo() {
 		return pinNo;
 	}
 
-
-
 	public synchronized void setPinNo(Long pinNo) {
 		this.pinNo = pinNo;
 	}
-
-
-	
-
-
 
 	public synchronized Long getId() {
 		return id;
@@ -97,8 +81,6 @@ public class Debit {
 	public synchronized void setId(Long id) {
 		this.id = id;
 	}
-	
-	
 
 	public synchronized Long getCvv() {
 		return cvv;
@@ -123,8 +105,6 @@ public class Debit {
 	public synchronized void setAccountNo(Long accountNo) {
 		this.accountNo = accountNo;
 	}
-
-	
 
 	public synchronized String getEmailId() {
 		return emailId;
@@ -174,23 +154,12 @@ public class Debit {
 		this.validUpto = validUpto;
 	}
 
-
-
-
 	public synchronized String getStatus() {
 		return status;
 	}
 
-
-
-
 	public synchronized void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
-	
-	
-	
-	
+
 }
