@@ -28,5 +28,10 @@ public class NotificationsService {
 		List<Notifications> n = notificationsRepository.findByEmailId(emailId);
 		return n;
 	}
+	public void deleteAccounts(Notifications n) {
+		// TODO Auto-generated method stub
+		notificationsRepository.delete(n);
+		
+	}
 	
 }
