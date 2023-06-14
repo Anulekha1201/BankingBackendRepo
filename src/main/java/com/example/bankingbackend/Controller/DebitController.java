@@ -65,18 +65,22 @@ public class DebitController {
 		System.out.println(dh1);
 		return dh1;
 	}
-
-	@PostMapping("/api/admindashboard/updatestatus/{cardNo}")
-	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
-		Debit da =debitService.getDebitDetails(cardNo);
+	@PostMapping("/api/admindashboard/updatestatus")
+	public boolean updatestatustoapprove(@RequestBody Debit debit) {
+		Debit da =debitService.getDebitDetails(debit.getCardNo());
 		//Debit da = debitRepository.findByCardNo(cardNo);
-		System.out.println(cardNo + " " + da.getStatus());
-
-		
-		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
-		
+		System.out.println(debit.getCardNo() + " " + da.getStatus());
+		Notifications n=new Notifications();
+		n.setEmailId(debit.getEmailId());
+		n.setCardNo(debit.getCardNo());
+		n.setNotificationType("Debit Card");
 		n.setStatus("Approved");
 		notificationsService.saveAccounts(n);
+		
+//		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
+//		
+//		n.setStatus("Approved");
+//		notificationsService.saveAccounts(n);
 		
 			da.setStatus("Approved");
 			debitService.addDetails(da);
@@ -84,6 +88,23 @@ public class DebitController {
 			return true;
 
 	}
+//	@PostMapping("/api/admindashboard/updatestatus/{cardNo}")
+//	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
+//		Debit da =debitService.getDebitDetails(cardNo);
+//		//Debit da = debitRepository.findByCardNo(cardNo);
+//		System.out.println(cardNo + " " + da.getStatus());
+//		
+////		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
+////		
+////		n.setStatus("Approved");
+////		notificationsService.saveAccounts(n);
+//		
+//			da.setStatus("Approved");
+//			debitService.addDetails(da);
+////			debitRepository.save(da);
+//			return true;
+//
+//	}
 
 	@PostMapping("/api/user/accountnocheck/{accountNo}")
 	public boolean accNoCheck(@PathVariable Long accountNo) {
@@ -102,12 +123,12 @@ public class DebitController {
 		System.out.println(accountno + " " + d);
 		if (d == null) {
 			
-			Notifications n=new Notifications();
-			n.setEmailId(debit.getEmailId());
-			n.setCardNo(debit.getCardNo());
-			n.setNotificationType("Debit Card");
-			n.setStatus("Waiting for approval");
-			notificationsService.saveAccounts(n);
+//			Notifications n=new Notifications();
+//			n.setEmailId(debit.getEmailId());
+//			n.setCardNo(debit.getCardNo());
+//			n.setNotificationType("Debit Card");
+//			n.setStatus("Waiting for approval");
+//			notificationsService.saveAccounts(n);
 			debitService.addDetails(debit);
 //			debitRepository.save(debit);
 			return true;
@@ -130,16 +151,23 @@ public class DebitController {
 //      else {
 //		
 //      }
+		
 		if (debit == null || debit.getStatus().equals("Waiting for approval")){
 			System.out.println(setpin.getPinNo() + " " + debit.getStatus());
 			//return false;
 			throw new ValidationException("Waiting for approval");
 		} else {
-			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+//			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+//			
+//			
+//			n.setStatus("Active");
+//			notificationsService.saveAccounts(n);
+			System.out.println(debit.getPinNo());
+			if(debit.getPinNo()==null) {
+				Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+				notificationsService.deleteAccounts(n);
+			}
 			
-			
-			n.setStatus("Active");
-			notificationsService.saveAccounts(n);
 			debit.setPinNo(setpin.getPinNo());
 			debit.setStatus(setpin.getStatus());
 			System.out.println(debit.getPinNo() + " " + debit.getStatus());
@@ -166,11 +194,11 @@ public class DebitController {
 			throw new BadRequestException("Debit card with given card number is already blocked");
 		}
 		else {
-			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
-			
-			
-			n.setStatus("Block");
-			notificationsService.saveAccounts(n);
+//			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+//			
+//			
+//			n.setStatus("Block");
+//			notificationsService.saveAccounts(n);
 			debit.setStatus(blockcard.getStatus());
 			debitService.addDetails(debit);
 			//debitRepository.save(debit);
@@ -198,10 +226,10 @@ public class DebitController {
 		else if(debit.getStatus()!="Block") {
 			throw new BadRequestException("Debit card with given card number is already Active");
 		}else {
-			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
-			
-			n.setStatus("Active");
-			notificationsService.saveAccounts(n);
+//			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+//			
+//			n.setStatus("Active");
+//			notificationsService.saveAccounts(n);
 			debit.setStatus(Unblockcard.getStatus());
 			debitService.addDetails(debit);
 			//debitRepository.save(debit);

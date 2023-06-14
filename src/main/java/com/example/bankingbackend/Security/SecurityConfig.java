@@ -43,17 +43,17 @@ public class SecurityConfig {
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
 
-				.requestMatchers(
-						"/api/user/register",
-						"/api/user/login",
-						"/api/user/support",
-						"api/user/login/{emailId}",
-						"/api/user/login/getDebitDetails/{accountNo}",
-						"/api/user/login/getCreditDetails/{accountNo}",
-						"/api/user/login/getLoanDetails/{cardNo}").permitAll()
-				
-				.anyRequest().authenticated().and().exceptionHandling()
+						"/api/user/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
+						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**","/api/admin/**",
 
+						"/login", "/api/user/password", "/api/user/checkCustomerId/{customerId}", "/api/user/register",
+						"/api/addLoans","/api/admindashboard/DebitapprovalsHistory","/api/user/**","/api/admindashboard/**",
+				"/api/admin/**","/getcredit","/api/user/unblockcreditcard","/api/user/blockcreditcard","/api/user/setorresetpinforcredit","/api/user/blockcard"
+						,"api/admin/updateAccount/{id}","/api/admin/viewAccount","api/user/register","/login", "/api/user/password",
+				"api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","api/admin/updateAccount/{id}","api/user/register","/login", "/api/user/password","/api/admindashboard/**","/api/admin/**","api/admin/addAccount","api/admin/getAccountById/{id}","api/admin/deleteAccount/{id}","/api/user/creditaccountnocheck/{accountNo}"
+				,"/api/admindashboard/CreditApprovedHisory","/api/admindashboard/CreditapprovalsHistory","/api/admin/getAccountById/{id}")
+
+				.permitAll().anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authenticationProvider(authenticationProvider())
