@@ -63,15 +63,21 @@ public class CreditController {
 		
 	}
 	
-	@PostMapping("/api/admindashboard/creditupdatestatus/{cardNo}")
-	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
+	@PostMapping("/api/admindashboard/creditupdatestatus")
+	public boolean updatestatustoapprove(@RequestBody Credit credit) {
 		
 		
-		Credit da=cs.getDetailsBycardNo(cardNo);
-		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Credit Card");
-		
+		Credit da=cs.getDetailsBycardNo(credit.getCardNo());
+		Notifications n=new Notifications();
+		n.setEmailId(credit.getEmailId());
+		n.setCardNo(credit.getCardNo());
+		n.setNotificationType("Credit Card");
 		n.setStatus("Approved");
 		notificationsService.saveAccounts(n);
+//		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Credit Card");
+//		
+//		n.setStatus("Approved");
+//		notificationsService.saveAccounts(n);
 		
 			da.setStatus("Approved");
 			cs.addDetails(da);
@@ -101,12 +107,12 @@ public class CreditController {
 		//Credit cr = creditrepository.findByAccountNo(accountNo);
 //		System.out.println(accountNo+" "+cr);
 		if(cr == null) {
-			Notifications n=new Notifications();
-			n.setEmailId(credit.getEmailId());
-			n.setCardNo(credit.getCardNo());
-			n.setNotificationType("Credit Card");
-			n.setStatus("Waiting for approval");
-			notificationsService.saveAccounts(n);
+//			Notifications n=new Notifications();
+//			n.setEmailId(credit.getEmailId());
+//			n.setCardNo(credit.getCardNo());
+//			n.setNotificationType("Credit Card");
+//			n.setStatus("Waiting for approval");
+//			notificationsService.saveAccounts(n);
 			
 			cs.addDetails(credit);
 			//creditrepository.save(credit);
@@ -128,11 +134,14 @@ public class CreditController {
 			throw new ValidationException("The credit card is not approved yet");
 		}
 		else {
-			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
-						
-			n.setStatus("Active");
-			notificationsService.saveAccounts(n);
-
+//			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+//						
+//			n.setStatus("Active");
+//			notificationsService.saveAccounts(n);
+			if(credit.getPinNo()==null) {
+				Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+				notificationsService.deleteAccounts(n);
+			}
 			credit.setPinNo(setPin.getPinNo());
 			credit.setStatus(setPin.getStatus());
 			System.out.println(credit.getPinNo()+" "+ credit.getStatus());
@@ -160,11 +169,11 @@ public class CreditController {
 			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
-			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
-			
-			
-			n.setStatus("Block");
-			notificationsService.saveAccounts(n);
+//			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+//			
+//			
+//			n.setStatus("Block");
+//			notificationsService.saveAccounts(n);
 
 
 			credit.setStatus(blockCard.getStatus());
@@ -194,10 +203,10 @@ public class CreditController {
 			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
-			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
-			
-			n.setStatus("Active");
-			notificationsService.saveAccounts(n);
+//			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+//			
+//			n.setStatus("Active");
+//			notificationsService.saveAccounts(n);
 
 			credit.setStatus(unblockcard.getStatus());
 			cs.addDetails(credit);
