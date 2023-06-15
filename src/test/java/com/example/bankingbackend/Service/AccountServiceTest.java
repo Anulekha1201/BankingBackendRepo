@@ -31,14 +31,14 @@ class AccountServiceTest {
 
 	 Accounts accountsReq=getMockAccounts();
 	 Accounts accountsRes=getMockAccountsRes();
-//     JobDetailsRequest jobDetailsRequest = getMockJobPostRequest();
-//     JobDetails jobDetails = getMockJobDetails();
+     JobDetailsRequest jobDetailsRequest = getMockJobPostRequest();
+     JobDetails jobDetails = getMockJobDetails();
 
 
 
-//        Mockito.when(jobDetailsRepo.save(Mockito.any(JobDetails.class))).thenReturn(jobDetails);
 	 	Mockito.when(accountsRepository.save(Mockito.any(Accounts.class))).thenReturn(accountsRes);
 
+        Mockito.when(jobDetailsRepo.save(Mockito.any(JobDetails.class))).thenReturn(jobDetails);
 
         Accounts acc =  accountservice.addAccounts(accountsReq);
 
@@ -49,7 +49,7 @@ class AccountServiceTest {
 
         assertEquals(1, accountsRes.getId());
         assertEquals(123L,accountsRes.getAccountNo());
-    }
+  }
 	private Accounts getMockAccountsRes() {
         return Accounts.builder()
         		.id(1L)
