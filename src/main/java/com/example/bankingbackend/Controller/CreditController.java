@@ -9,17 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Credit;
-import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Notifications;
-import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Exception.BadRequestException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.CreditService;
-import com.example.bankingbackend.repository.CreditRepository;
+import com.example.bankingbackend.Service.NotificationsService;
 
 import jakarta.validation.ValidationException;
 @CrossOrigin("*")
@@ -64,15 +63,21 @@ public class CreditController {
 		
 	}
 	
-	@PostMapping("/api/admindashboard/creditupdatestatus/{cardNo}")
-	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
+	@PostMapping("/api/admindashboard/creditupdatestatus")
+	public boolean updatestatustoapprove(@RequestBody Credit credit) {
 		
 		
-		Credit da=cs.getDetailsBycardNo(cardNo);
-		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Credit Card");
-		
+		Credit da=cs.getDetailsBycardNo(credit.getCardNo());
+		Notifications n=new Notifications();
+		n.setEmailId(credit.getEmailId());
+		n.setCardNo(credit.getCardNo());
+		n.setNotificationType("Credit Card");
 		n.setStatus("Approved");
 		notificationsService.saveAccounts(n);
+//		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Credit Card");
+//		
+//		n.setStatus("Approved");
+//		notificationsService.saveAccounts(n);
 		
 			da.setStatus("Approved");
 			cs.addDetails(da);
@@ -90,6 +95,7 @@ public class CreditController {
 			//return false;
 		}
 			return true;
+			
 		
 	}
 	
@@ -101,12 +107,12 @@ public class CreditController {
 		//Credit cr = creditrepository.findByAccountNo(accountNo);
 //		System.out.println(accountNo+" "+cr);
 		if(cr == null) {
-			Notifications n=new Notifications();
-			n.setEmailId(credit.getEmailId());
-			n.setCardNo(credit.getCardNo());
-			n.setNotificationType("Credit Card");
-			n.setStatus("Waiting for approval");
-			notificationsService.saveAccounts(n);
+//			Notifications n=new Notifications();
+//			n.setEmailId(credit.getEmailId());
+//			n.setCardNo(credit.getCardNo());
+//			n.setNotificationType("Credit Card");
+//			n.setStatus("Waiting for approval");
+//			notificationsService.saveAccounts(n);
 			
 			cs.addDetails(credit);
 			//creditrepository.save(credit);
@@ -128,11 +134,14 @@ public class CreditController {
 			throw new ValidationException("The credit card is not approved yet");
 		}
 		else {
-			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
-						
-			n.setStatus("Active");
-			notificationsService.saveAccounts(n);
-
+//			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+//						
+//			n.setStatus("Active");
+//			notificationsService.saveAccounts(n);
+			if(credit.getPinNo()==null) {
+				Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+				notificationsService.deleteAccounts(n);
+			}
 			credit.setPinNo(setPin.getPinNo());
 			credit.setStatus(setPin.getStatus());
 			System.out.println(credit.getPinNo()+" "+ credit.getStatus());
@@ -147,24 +156,24 @@ public class CreditController {
 	}
 	
 	@PostMapping("/api/user/blockcreditcard")
-	public boolean BlockCreditCard(@RequestBody BlockorUnBlockCard blockCard) {
+	public boolean BlockCreditCard(@RequestBody BlockorUnBlockCard blockCard) throws BadRequestException {
 		Credit credit = cs.getDetailsBycardNo(blockCard.getCardNo());
 		//Credit credit = creditrepository.findByCardNo(blockCard.getCardNo());
 		System.out.println(blockCard.getCardNo());
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
 		}
-		else if(credit.getCvv()!=blockCard.getCvv() || credit.getPinNo() != blockCard.getPinNo())
+		else if(!credit.getCvv().equals(blockCard.getCvv()) || !credit.getPinNo().equals( blockCard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(credit.getStatus()!="Active") {
+		else if(!credit.getStatus().equals("Active")) {
 			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
-			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
-			
-			
-			n.setStatus("Block");
-			notificationsService.saveAccounts(n);
+//			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+//			
+//			
+//			n.setStatus("Block");
+//			notificationsService.saveAccounts(n);
 
 
 			credit.setStatus(blockCard.getStatus());
@@ -188,16 +197,16 @@ public class CreditController {
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
 		}
-		else if(credit.getCvv()!=unblockcard.getCvv() || credit.getPinNo() != unblockcard.getPinNo())
+		else if(!credit.getCvv().equals(unblockcard.getCvv()) || credit.getPinNo().equals (unblockcard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(credit.getStatus()!="Block") {
+		else if(!credit.getStatus().equals("Block")) {
 			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
-			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
-			
-			n.setStatus("Active");
-			notificationsService.saveAccounts(n);
+//			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
+//			
+//			n.setStatus("Active");
+//			notificationsService.saveAccounts(n);
 
 			credit.setStatus(unblockcard.getStatus());
 			cs.addDetails(credit);

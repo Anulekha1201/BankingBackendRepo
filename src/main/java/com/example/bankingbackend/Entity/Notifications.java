@@ -17,6 +17,7 @@ import lombok.Data;
 @Builder
 @Table(name = "Notifications")
 public class Notifications {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
