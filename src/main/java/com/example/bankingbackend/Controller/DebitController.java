@@ -178,7 +178,7 @@ public class DebitController {
 			debitService.addDetails(debit);
 			//debitRepository.save(debit);
 			emailService.sendVerificationEmailforsetpin(debit.getEmailId(), debit.getCardNo(), debit.getPinNo());
-			System.out.println("Mail Send..");
+			System.out.println("Mail Sent..");
 			return true;
 		}
 	}
@@ -192,9 +192,9 @@ public class DebitController {
 		if (debit == null) {
 			throw new BadRequestException("Debit card with given card number doesn't exists");
 		} 
-		else if(debit.getCvv()!=blockcard.getCvv() || debit.getPinNo() != blockcard.getPinNo())
+		 if(!debit.getCvv().equals(blockcard.getCvv()) || !debit.getPinNo().equals(blockcard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(debit.getStatus()!="Active") {
+		else if(!debit.getStatus().equals("Active")) {
 			throw new BadRequestException("Debit card with given card number is already blocked");
 		}
 		else {
@@ -225,9 +225,9 @@ public class DebitController {
 			//return false;
 			throw new BadRequestException("Debit card number must not be null please, Enter the correct Debit card number");
 		}
-		else if(debit.getCvv()!=Unblockcard.getCvv() || debit.getPinNo() != Unblockcard.getPinNo())
+		else if(!debit.getCvv().equals(Unblockcard.getCvv()) || !debit.getPinNo().equals(Unblockcard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(debit.getStatus()!="Block") {
+		else if(!debit.getStatus().equals("Block")) {
 			throw new BadRequestException("Debit card with given card number is already Active");
 		}else {
 //			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
@@ -245,13 +245,5 @@ public class DebitController {
 
 		}
 	}
-
-//      @GetMapping("api/user/transactionHistory/{accountNo}")
-//  	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo)
-//  	{
-//		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
-//  		
-//  		return th;
-//  	}
 
 }

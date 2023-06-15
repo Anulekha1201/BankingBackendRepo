@@ -9,17 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.example.bankingbackend.EmailSenderService;
 import com.example.bankingbackend.Entity.BlockorUnBlockCard;
 import com.example.bankingbackend.Entity.Credit;
-import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Notifications;
-import com.example.bankingbackend.Service.NotificationsService;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Exception.BadRequestException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.CreditService;
-import com.example.bankingbackend.repository.CreditRepository;
+import com.example.bankingbackend.Service.NotificationsService;
 
 import jakarta.validation.ValidationException;
 @CrossOrigin("*")
@@ -96,6 +95,7 @@ public class CreditController {
 			//return false;
 		}
 			return true;
+			
 		
 	}
 	
@@ -156,16 +156,16 @@ public class CreditController {
 	}
 	
 	@PostMapping("/api/user/blockcreditcard")
-	public boolean BlockCreditCard(@RequestBody BlockorUnBlockCard blockCard) {
+	public boolean BlockCreditCard(@RequestBody BlockorUnBlockCard blockCard) throws BadRequestException {
 		Credit credit = cs.getDetailsBycardNo(blockCard.getCardNo());
 		//Credit credit = creditrepository.findByCardNo(blockCard.getCardNo());
 		System.out.println(blockCard.getCardNo());
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
 		}
-		else if(credit.getCvv()!=blockCard.getCvv() || credit.getPinNo() != blockCard.getPinNo())
+		else if(!credit.getCvv().equals(blockCard.getCvv()) || !credit.getPinNo().equals( blockCard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(credit.getStatus()!="Active") {
+		else if(!credit.getStatus().equals("Active")) {
 			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
@@ -197,9 +197,9 @@ public class CreditController {
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
 		}
-		else if(credit.getCvv()!=unblockcard.getCvv() || credit.getPinNo() != unblockcard.getPinNo())
+		else if(!credit.getCvv().equals(unblockcard.getCvv()) || credit.getPinNo().equals (unblockcard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(credit.getStatus()!="Block") {
+		else if(!credit.getStatus().equals("Block")) {
 			throw new BadRequestException("Credit card with given card number is already blocked");
 		}
 		else {
