@@ -44,12 +44,12 @@ public class SecurityConfig {
 		return http.csrf().disable().authorizeHttpRequests()
 				.requestMatchers(
 						"/api/user/register",
-						"/api/user/login",
+						"/api/user/**",
 						"/api/user/login/{emailId}",
 						"/api/user/login/getDebitDetails/{accountNo}",
 						"/api/user/login/getCreditDetails/{accountNo}",
-						"/api/user/login/getLoanDetails/{cardNo}",
-						"/api/user/transactions/deposit/{accountNo}/{amount}"
+						"/api/user/login/getLoanDetails/{cardNo}"
+//						"/api/user/transactions/deposit/{accountNo}/{amount}"
 						)
 
 				.permitAll().anyRequest().authenticated().and().exceptionHandling()
