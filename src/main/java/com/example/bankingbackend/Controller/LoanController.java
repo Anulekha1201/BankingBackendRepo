@@ -41,7 +41,7 @@ public class LoanController {
 
 	@GetMapping("/api/admindashboard/LoanapprovedHistory")
 	public List<Loans> DebitapprovedHistory() {
-		List<Loans> dh=loanService.getdetailsbystatus("Approved");
+		List<Loans> dh=loanService.getdetailsbystatus("Active");
 		//List<Loans> dh = loanrepository.findByStatus("Approved");
 		System.out.println(dh);
 		return dh;
@@ -58,10 +58,10 @@ public class LoanController {
 		
 		Notifications n=notificationsService.getnotificationsDetails(cardNo,"Loan");
 		
-		n.setStatus("Approved");
+		n.setStatus("Active");
 		notificationsService.saveAccounts(n);
 		
-		da.setStatus("Approved");
+		da.setStatus("Active");
 		loanService.addDetails(da);
 //		loanrepository.save(da);
 		return true;
