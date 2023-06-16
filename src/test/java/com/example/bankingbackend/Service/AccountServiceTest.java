@@ -1,9 +1,8 @@
 package com.example.bankingbackend.Service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 //import static org.mockito.ArgumentMatchers.isNull;
-
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -29,41 +28,44 @@ class AccountServiceTest {
     void test_When_saveaccounts_success() {
 
 
-//	 Accounts accountsReq=getMockAccounts();
-//	 Accounts accountsRes=getMockAccountsRes();
-//     JobDetailsRequest jobDetailsRequest = getMockJobPostRequest();
-//     JobDetails jobDetails = getMockJobDetails();
-//
-//
-//
-//	 	Mockito.when(accountsRepository.save(Mockito.any(Accounts.class))).thenReturn(accountsRes);
-//
-//        Mockito.when(jobDetailsRepo.save(Mockito.any(JobDetails.class))).thenReturn(jobDetails);
-//
-//        Accounts acc =  accountservice.addAccounts(accountsReq);
-//
-//        System.out.println(acc);
-//
-//        verify(accountsRepository, times(1))
-//                .save(any());
-//
-//        assertEquals(1, accountsRes.getId());
-//        assertEquals(123L,accountsRes.getAccountNo());
-//  }
-//	private Accounts getMockAccountsRes() {
-//        return Accounts.builder()
-//        		.id(1L)
-//                .accountNo(3451234567L)
-//                .emailId("anulekhaachanta7@gamil.com")
-//                .status("Active")
-//                .build();
-//    }
-//	private Accounts getMockAccounts() {
-//        return Accounts.builder()
-//                .accountNo(3451234567L)
-//                .emailId("anulekhaachanta7@gamil.com")
-//                .status("Active")
-//                .build();
-//    }
+	 Accounts accountsReq=getMockAccounts();
+	 Accounts accountsRes=getMockAccountsRes();
+     JobDetailsRequest jobDetailsRequest = getMockJobPostRequest();
+     JobDetails jobDetails = getMockJobDetails();
+
+
+
+	 	Mockito.when(accountsRepository.save(Mockito.any(Accounts.class))).thenReturn(accountsRes);
+
+        Mockito.when(jobDetailsRepo.save(Mockito.any(JobDetails.class))).thenReturn(jobDetails);
+
+        Accounts acc =  accountservice.addAccounts(accountsReq);
+
+        System.out.println(acc);
+
+        verify(accountsRepository, times(1))
+                .save(any());
+
+        assertEquals(1, accountsRes.getId());
+        assertEquals(123L,accountsRes.getAccountNo());
+  }
+	private Accounts getMockAccountsRes() {
+        return Accounts.builder()
+        		.id(1L)
+                .accountNo(3451234567L)
+                .emailId("anulekhaachanta7@gamil.com")
+                .status("Active")
+                .build();
+    }
+	
+	
+	private Accounts getMockAccounts() {
+        return Accounts.builder()
+                .accountNo(3451234567L)
+                .emailId("anulekhaachanta7@gamil.com")
+                .status("Active")
+                .build();
+        
+    }
 }
-}
+

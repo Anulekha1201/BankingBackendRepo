@@ -70,7 +70,8 @@ public class TransactionController {
     public boolean debitWithDrawal(@PathVariable Long debitNo, @PathVariable Long amount) throws  ResourceNotFoundException, ValidationException
 	{
 		Debit d= debitService.getDebitDetails(debitNo);
-		
+		if(d.getStatus().equals("Active"))
+		{
 		if(d==null)
 		{
 			throw new ResourceNotFoundException("Debit card doesn't exists");
@@ -99,6 +100,10 @@ public class TransactionController {
 				return true;
 			}
 		}
+		}
+		else {
+			throw new ResourceNotFoundException("Debit Card is not Approved");
+		}
     	
 	}
 	
@@ -106,7 +111,7 @@ public class TransactionController {
     public boolean creditPayment(@PathVariable Long creditNo, @PathVariable Long amount) throws  ResourceNotFoundException, ValidationException
 	{
 		Credit c= creditService.getDetailsBycardNo(creditNo);
-		
+		if(c.getStatus().equals("Active")) {
 		if(c==null)
 		{
 			throw new ResourceNotFoundException("Credit card doesn't exists");
@@ -134,11 +139,16 @@ public class TransactionController {
 				return true;
 			}
 		}
+		}
+		else {
+			throw new ResourceNotFoundException("Credit Card is not approved");
+		}
     	
 	}
 	
-	@PutMapping("api/user/payLoanTransaction/{loanId}/{accountNo}")
-	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) {
+	@PutMapping("api/user/payLoanTransaction/{loanId}/{accountNo}") 
+	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) throws  ResourceNotFoundException {
+		   System.out.println("in method");
 		    float l = loanService.getInstallmentByLoanId(loanId);
 		    
 		    long timestamp = System.currentTimeMillis();
@@ -146,18 +156,21 @@ public class TransactionController {
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	        String sqlDate = dateFormat.format(date);
 	        
-	        System.out.println(sqlDate);
+//	        System.out.println(sqlDate);
 			
 	        
 		    Loans loan= loanService.getLoanByLoanId(loanId);
 			Accounts account= accountService.getAccWithAccNo(accountNo);
+			if(loan.getStatus().equals("Active")) {
+			if(loan.getBalanceAmt()>0 ) 
+			{
 			if(account.getBalance()>=l) {
 				account.setBalance(account.getBalance()-l);
 				accountService.saveAccounts(account);
 				
 				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
-				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
+				loan.setBalanceAmt(loan.getBalanceAmt()-l);
 				loanService.applyLoan(loan);
 				System.out.println("Paid loan : "+l);
 				return true;
@@ -169,7 +182,18 @@ public class TransactionController {
 				System.out.println("Payment Unsuccessful. Insufficient balance");
 				return false;
 			}
-		
+			}
+			
+			else {
+				throw new ResourceNotFoundException("Loan Completed");
+			}
+			}
+			else
+			{
+				throw new ResourceNotFoundException("Loan is not Approved");
+			}
+			
+//			return true;
 	}
 	
 	@PutMapping("/api/user/transactions/transfer/{accountNoFrom}/{accountNoTo}/{amount}")
@@ -240,10 +264,17 @@ public class TransactionController {
 	}
 	
 	@GetMapping("api/user/getInstallmentByLoanId/{loanId}")
-	public float getLoanInstallmentByLoanId(@PathVariable Long loanId)
+	public float getLoanInstallmentByLoanId(@PathVariable Long loanId)throws ResourceNotFoundException 
 	{
+		Loans loan = loanService.getLoanByLoanId(loanId);
+		if(loan.getStatus().equals("Active")) {
 		float l=loanService.getInstallmentByLoanId(loanId);
+		 
 		return l;	
+		}
+		else {
+			throw new ResourceNotFoundException("Loan is not Approved");
+		}
 	}
 	
 	@PutMapping("api/user/payCreditBill/{creditNo}/{bill}")
@@ -258,6 +289,7 @@ public class TransactionController {
 	        System.out.println(sqlDate);
 	        
 			Accounts account= accountService.getAccWithAccNo(c.getAccountNo());
+			
 			if(account.getBalance()>=bill) {
 				account.setBalance(account.getBalance()-bill);
 				accountService.saveAccounts(account);
@@ -276,6 +308,7 @@ public class TransactionController {
 				System.out.println("Payment Unsuccessful. Insufficient balance");
 				return false;
 			}
+			
 		
 	}
 	
