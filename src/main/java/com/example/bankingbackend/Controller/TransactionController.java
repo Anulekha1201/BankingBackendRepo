@@ -157,8 +157,8 @@ public class TransactionController {
 				
 				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
-				loan.setBalanceAmt(loan.getTotalLoanAmt()-l);
-				loanService.applyLoan(loan);
+				loan.setBalanceAmt(loan.getBalanceAmt()-l);
+				loanService.addDetails(loan);
 				System.out.println("Paid loan : "+l);
 				return true;
 			}
