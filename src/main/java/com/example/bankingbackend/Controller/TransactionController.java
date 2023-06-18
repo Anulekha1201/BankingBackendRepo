@@ -37,12 +37,12 @@ public class TransactionController {
 	private DebitService debitService;
 	@Autowired
 	private CreditService creditService;
-	
+
 	@Autowired
 	private TransactionHistoryService transactionHistoryService;
-	
+
 	@PutMapping("/api/user/transactions/deposit/{accountNo}/{amount}")
-    public boolean deposit(@PathVariable Long accountNo, @PathVariable Long amount) throws ResourceNotFoundException 
+    public boolean deposit(@PathVariable Long accountNo, @PathVariable Long amount) throws ResourceNotFoundException
 	{
 		boolean accExists= accountService.checkAccountExists(accountNo);
 		System.out.println("in meth");
@@ -70,7 +70,8 @@ public class TransactionController {
     public boolean debitWithDrawal(@PathVariable Long debitNo, @PathVariable Long amount) throws  ResourceNotFoundException, ValidationException
 	{
 		Debit d= debitService.getDebitDetails(debitNo);
-		
+		if(d.getStatus().equals("Active"))
+		{
 		if(d==null)
 		{
 			throw new ResourceNotFoundException("Debit card doesn't exists");
@@ -95,18 +96,22 @@ public class TransactionController {
 		        System.out.println(sqlDate);
 				TransactionHistory t = new TransactionHistory(null, d.getAccountNo(), "Debit-WithDrawal", amount, d.getAccountNo(), "success",sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
-				
+
 				return true;
 			}
 		}
-    	
+		}
+		else {
+			throw new ResourceNotFoundException("Debit Card is not Approved");
+		}
+
 	}
-	
+
 	@PutMapping("/api/user/transactions/creditPayment/{creditNo}/{amount}")
     public boolean creditPayment(@PathVariable Long creditNo, @PathVariable Long amount) throws  ResourceNotFoundException, ValidationException
 	{
 		Credit c= creditService.getDetailsBycardNo(creditNo);
-		
+		if(c.getStatus().equals("Active")) {
 		if(c==null)
 		{
 			throw new ResourceNotFoundException("Credit card doesn't exists");
@@ -130,31 +135,39 @@ public class TransactionController {
 		        System.out.println(sqlDate);
 				TransactionHistory t = new TransactionHistory(null, c.getAccountNo(), "Credit-WithDrawal", amount, c.getAccountNo(), "success",sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
-				
+
 				return true;
 			}
 		}
-    	
+		}
+		else {
+			throw new ResourceNotFoundException("Credit Card is not approved");
+		}
+
 	}
-	
+
 	@PutMapping("api/user/payLoanTransaction/{loanId}/{accountNo}")
-	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) {
+	public boolean payLoan(@PathVariable Long loanId, @PathVariable Long accountNo) throws  ResourceNotFoundException {
+		   System.out.println("in method");
 		    float l = loanService.getInstallmentByLoanId(loanId);
-		    
+
 		    long timestamp = System.currentTimeMillis();
 	        Date date = new Date(timestamp);
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	        String sqlDate = dateFormat.format(date);
-	        
-	        System.out.println(sqlDate);
-			
-	        
+
+//	        System.out.println(sqlDate);
+
+
 		    Loans loan= loanService.getLoanByLoanId(loanId);
 			Accounts account= accountService.getAccWithAccNo(accountNo);
+			if(loan.getStatus().equals("Active")) {
+			if(loan.getBalanceAmt()>0 )
+			{
 			if(account.getBalance()>=l) {
 				account.setBalance(account.getBalance()-l);
 				accountService.saveAccounts(account);
-				
+
 				TransactionHistory t = new TransactionHistory(null, accountNo, "Loan", l, accountNo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				loan.setBalanceAmt(loan.getBalanceAmt()-l);
@@ -169,15 +182,26 @@ public class TransactionController {
 				System.out.println("Payment Unsuccessful. Insufficient balance");
 				return false;
 			}
-		
+			}
+
+			else {
+				throw new ResourceNotFoundException("Loan Completed");
+			}
+			}
+			else
+			{
+				throw new ResourceNotFoundException("Loan is not Approved");
+			}
+
+//			return true;
 	}
-	
+
 	@PutMapping("/api/user/transactions/transfer/{accountNoFrom}/{accountNoTo}/{amount}")
-    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable Long amount) throws ResourceNotFoundException, ValidationException,BadRequestException 
+    public boolean transfer(@PathVariable Long accountNoFrom, @PathVariable Long accountNoTo, @PathVariable Long amount) throws ResourceNotFoundException, ValidationException,BadRequestException
 	{
 		boolean accExists= accountService.checkAccountExists(accountNoFrom);
 		boolean accExists2= accountService.checkAccountExists(accountNoTo);
-		
+
 		if(!(accExists && accExists2))
 		{
 			System.out.println("Account doesn't exists."+(accExists && accExists2));
@@ -211,11 +235,11 @@ public class TransactionController {
 		        System.out.println(sqlDate);
 				TransactionHistory t = new TransactionHistory(null, accountNoFrom, "Transfer", amount, accountNoTo, "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
-				
+
 				return true;
 			}
 		}
-    	
+
 	}
 
 	@GetMapping("api/user/transactionHistory/{accountNo}")
@@ -225,7 +249,7 @@ public class TransactionController {
 		System.out.println("transaction history: "+th);
 		return th;
 	}
-	
+
 	@GetMapping("api/user/checkIfLoanExistsByLoanId/{loanId}")
 	public boolean checkIfLoanExistsByLoanId(@PathVariable Long loanId)
 	{
@@ -236,32 +260,40 @@ public class TransactionController {
 			//return false;
 			throw new ResourceNotFoundException("Loan doesn't exists with loan id: "+loanId);
 		}
-		return true;	
+		return true;
 	}
-	
+
 	@GetMapping("api/user/getInstallmentByLoanId/{loanId}")
-	public float getLoanInstallmentByLoanId(@PathVariable Long loanId)
+	public float getLoanInstallmentByLoanId(@PathVariable Long loanId)throws ResourceNotFoundException
 	{
+		Loans loan = loanService.getLoanByLoanId(loanId);
+		if(loan.getStatus().equals("Active")) {
 		float l=loanService.getInstallmentByLoanId(loanId);
-		return l;	
+
+		return l;
+		}
+		else {
+			throw new ResourceNotFoundException("Loan is not Approved");
+		}
 	}
-	
+
 	@PutMapping("api/user/payCreditBill/{creditNo}/{bill}")
 	public boolean payCreditBill(@PathVariable Long creditNo, @PathVariable Long bill) {
 		    Credit c = creditService.getDetailsBycardNo(creditNo);
-		    
+
 		    long timestamp = System.currentTimeMillis();
 	        Date date = new Date(timestamp);
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	        String sqlDate = dateFormat.format(date);
-	        
+
 	        System.out.println(sqlDate);
-	        
+
 			Accounts account= accountService.getAccWithAccNo(c.getAccountNo());
+
 			if(account.getBalance()>=bill) {
 				account.setBalance(account.getBalance()-bill);
 				accountService.saveAccounts(account);
-				
+
 				TransactionHistory t = new TransactionHistory(null, c.getAccountNo(), "Credit bill payment", bill, c.getCardNo(), "success", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				c.setCreditBalance(c.getCreditAmount());
@@ -276,15 +308,16 @@ public class TransactionController {
 				System.out.println("Payment Unsuccessful. Insufficient balance");
 				return false;
 			}
-		
+
+
 	}
-	
+
 	@GetMapping("api/user/getCreditBill/{CreditNo}")
 	public float getCreditBill(@PathVariable Long CreditNo)
 	{
 		float c=creditService.getCreditBill(CreditNo);
-		return c;	
+		return c;
 	}
-	
+
 
 }

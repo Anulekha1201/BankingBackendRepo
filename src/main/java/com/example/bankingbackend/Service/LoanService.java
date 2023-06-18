@@ -19,7 +19,14 @@ public class LoanService {
 		loan.setStatus("Waiting for approval");
 		loanRepository.save(loan);	
 	}
-
+//    public boolean checkStatus(String Status)throws ResourceNotFoundException {
+//    	if(loanRepository.findByStatus(Status).equals("Active")) {
+//    	return true;
+//    	}
+//    	else {
+//			throw new ResourceNotFoundException("Loan is Not approved");
+//		}
+//    }
 	public boolean checkIfLoanExistsWithDebitCardNo(Long cardNo) throws ResourceNotFoundException {
 		if (loanRepository.findByCardNo(cardNo) == null) {
 			return true;
