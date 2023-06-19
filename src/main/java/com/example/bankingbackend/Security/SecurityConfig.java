@@ -44,7 +44,7 @@ public class SecurityConfig {
 		return http.csrf().disable().authorizeHttpRequests()
 				.requestMatchers(
 						"/api/user/register",
-						"/api/user/**",
+						"/api/user/login",
 						"/api/user/login/{emailId}",
 						"/api/user/login/getDebitDetails/{accountNo}",
 						"/api/user/login/getCreditDetails/{accountNo}",

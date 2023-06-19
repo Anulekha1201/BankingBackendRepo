@@ -1,4 +1,4 @@
-/*package com.example.bankingbackend.Service;
+package com.example.bankingbackend.Service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,4 +63,3 @@ class DebitServiceTest {
                 .build();
     }
 }
-*/

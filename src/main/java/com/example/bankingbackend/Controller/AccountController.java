@@ -95,7 +95,7 @@ public class AccountController {
 	
 	@GetMapping("/api/user/login/getLoanDetails/{cardNo}")
     public Loans getLoanDetails(@PathVariable Long cardNo)  {
-		
+		System.out.println(cardNo);
 		Loans loan = loanService.getLoanDetailsByCardNo(cardNo);
 		System.out.println(loan);
 		return loan;
