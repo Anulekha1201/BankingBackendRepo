@@ -26,7 +26,6 @@ import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
 import com.example.bankingbackend.Service.TransactionHistoryService;
 
-@CrossOrigin("*")
 @RestController
 public class TransactionController {
 	@Autowired
