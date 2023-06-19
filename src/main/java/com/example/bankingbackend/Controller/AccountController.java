@@ -36,30 +36,30 @@ public class AccountController {
 	@Autowired
 	public LoanService loanService;
 	
-	@GetMapping("/api/admin/accounts")
+	@GetMapping("/api/admindashboard/accounts")
 	public List<Accounts> getAllAccounts() {
 		return accountService.getAllAccounts();
 	}
 	
-	@PostMapping("api/admin/addAccount")
+	@PostMapping("api/admindashboard/addAccount")
 	public Accounts addAccount(@RequestBody Accounts account)  {
 		return accountService.addAccounts(account);	
 	}
 	
-	@PutMapping("api/admin/updateAccount/{id}")
+	@PutMapping("api/admindashboard/updateAccount/{id}")
 	public Accounts updateAccount(@PathVariable Long id,@RequestBody Accounts account)
 	{
 		return accountService.updateAccount(id,account);
 	}
 	
-	@GetMapping("/api/admin/getAccountByCustomerId/{customerId}")
+	@GetMapping("/api/admindashboard/getAccountByCustomerId/{customerId}")
     public List<Accounts> getAccountByCustomerId(@PathVariable String custid)  {
 		
 		List<Accounts> account = accountService.getAccountByCustomerId(custid);
 		return account;
     }
 	
-	@GetMapping("/api/admin/getAccountById/{id}")
+	@GetMapping("/api/admindashboard/getAccountById/{id}")
     public List<Accounts> getAccountById(@PathVariable Long id)  {
 		
 		List<Accounts> account = accountService.getAccountById(id);
@@ -102,7 +102,7 @@ public class AccountController {
     }
 	
 	
-	@DeleteMapping("api/admin/deleteAccount/{id}")
+	@DeleteMapping("api/admindashboard/deleteAccount/{id}")
 	public void deleteAccountById(@PathVariable long id) {
 		accountService.deleteAccount(id);
 		

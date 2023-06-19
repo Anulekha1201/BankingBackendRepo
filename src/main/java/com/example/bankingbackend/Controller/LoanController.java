@@ -71,7 +71,7 @@ public class LoanController {
 	@PostMapping("api/user/applyLoan")
 	public boolean addLoan(@RequestBody Loans loan) throws ResourceNotFoundException,BadRequestException{
 		Long cardNo = loan.getCardNo();
-		System.out.println("carNo: " + loan.getCardNo());
+		System.out.println("cardNo: " + loan.getCardNo());
 		if (debitService.checkDebitExists(cardNo)) {
 			if (loanService.checkIfLoanExistsWithDebitCardNo(cardNo)) {
 				System.out.println(loanService.checkIfLoanExistsWithDebitCardNo(cardNo));
