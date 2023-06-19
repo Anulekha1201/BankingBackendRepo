@@ -30,11 +30,10 @@ import com.example.bankingbackend.Security.JwtService;
 import com.example.bankingbackend.Security.UserInfoDetailsService;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.UserInfoService;
-import com.example.bankingbackend.repository.AccountsRepository;
-import com.example.bankingbackend.repository.DebitRepository;
-import com.example.bankingbackend.repository.UserInfoRepository;
 
-@CrossOrigin("*")
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 @RestController
 public class RegistrationController {
 
@@ -128,47 +127,26 @@ public class RegistrationController {
 		}
 	}
 
-//	@PostMapping("/api/user/login")
-//	public boolean loginUser(@RequestBody LoginForm loginForm) {
-//
-//		System.out.println(loginForm.getCustomerId());
-//		System.out.println(loginForm.getEmailId());
-//		System.out.println(loginForm.getPassword());
-//		System.out.println(loginForm.getEmailId());
-//		UserInfo user = userInfoRepository.findByCustomerIdOrEmailId(loginForm.getCustomerId(), loginForm.getEmailId());
-//		if (user != null) {
-//			// Verify password
-//			if (loginForm.getPassword().equals(user.getpassword())) {
-//				// Authentication successful, return user details
-////    		System.out.println(user.getpassword());
-//				return true;
-//			}
-//		}
-//		return false;
-//
-//	}
-
 	@PostMapping("/api/user/login")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					authenticationRequest.getEmailId(), authenticationRequest.getPassword()));
-			System.out.println("in login meth");
-		} catch (UsernameNotFoundException e) {
-//			LOGGER.error("User not found", e);
-			return ResponseEntity.badRequest().body("User not found");
-		} catch (BadCredentialsException e) {
-//			LOGGER.error("Bad Credentials", e);
-			return ResponseEntity.badRequest().body("Bad Credential");
-		}
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest,
+	        HttpServletResponse response) throws Exception {
+	    try {
+	        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+	                authenticationRequest.getEmailId(), authenticationRequest.getPassword()));
+	        System.out.println("in login meth");
+	    } catch (UsernameNotFoundException e) {
+	        return ResponseEntity.badRequest().body("User not found");
+	    } catch (BadCredentialsException e) {
+	        return ResponseEntity.badRequest().body("Bad Credential");
+	    }
 
-		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmailId());
-		String token = jwtService.generateToken(userDetails.getUsername());
-//		LOGGER.info("Token generated for user {}", userDetails.getUsername());
-		System.out.println(token);
-		return ResponseEntity.ok(new JwtResponse(token));
+	    UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmailId());
+	    String token = jwtService.generateToken(userDetails.getUsername());
+	    System.out.println(token);
+	    
+	    return ResponseEntity.ok(new JwtResponse(token));
 	}
-	
+
 	@GetMapping("/api/user/login/{emailId}")
 	public List<Accounts> getAccountDetails(@PathVariable String emailId) {
 		List<Accounts> account = accountService.getAccountByEmailId(emailId);

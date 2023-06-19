@@ -30,9 +30,6 @@ class AccountServiceTest {
 
 	 Accounts accountsReq=getMockAccounts();
 	 Accounts accountsRes=getMockAccountsRes();
-     
-
-
 
 	 	Mockito.when(accountsRepository.save(Mockito.any(Accounts.class))).thenReturn(accountsRes);
 

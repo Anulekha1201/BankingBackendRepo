@@ -39,9 +39,19 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.cors();
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
-				.requestMatchers("/api/user/**","/api/admindashboard/**","/api/admin/**")
+				.requestMatchers(
+						"/api/user/register",
+						"/api/user/login",
+						"/api/user/login/{emailId}",
+						"/api/user/login/getDebitDetails/{accountNo}",
+						"/api/user/login/getCreditDetails/{accountNo}",
+						"/api/user/login/getLoanDetails/{cardNo}",
+						"api/user/support"
+//						"/api/user/transactions/deposit/{accountNo}/{amount}"
+						)
 
 				.permitAll().anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()

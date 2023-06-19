@@ -3,7 +3,6 @@ package com.example.bankingbackend.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +20,7 @@ import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.NotificationsService;
-import com.example.bankingbackend.Service.TransactionHistoryService;
-import com.example.bankingbackend.repository.DebitRepository;
 
-@CrossOrigin("*")
 @RestController
 public class DebitController {
 

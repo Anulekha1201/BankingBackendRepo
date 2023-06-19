@@ -1,17 +1,14 @@
 package com.example.bankingbackend.Controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingbackend.Entity.Accounts;
@@ -23,7 +20,6 @@ import com.example.bankingbackend.Service.CreditService;
 import com.example.bankingbackend.Service.DebitService;
 import com.example.bankingbackend.Service.LoanService;
 
-@CrossOrigin("*")
 @RestController
 
 public class AccountController {
@@ -99,7 +95,7 @@ public class AccountController {
 	
 	@GetMapping("/api/user/login/getLoanDetails/{cardNo}")
     public Loans getLoanDetails(@PathVariable Long cardNo)  {
-		
+		System.out.println(cardNo);
 		Loans loan = loanService.getLoanDetailsByCardNo(cardNo);
 		System.out.println(loan);
 		return loan;

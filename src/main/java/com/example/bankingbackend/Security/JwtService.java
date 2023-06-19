@@ -1,56 +1,4 @@
 package com.example.bankingbackend.Security;
-/*
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-
-@Component
-public class JwtService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(JwtService.class);
-
-	public static final long JWT_TOKEN_VALIDITY = 1 * 60 * 60;
-
-	private static final String jwtSecret = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
-
-	private Key getSignKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-		return Keys.hmacShaKeyFor(keyBytes);
-	}
-
-	public String generateToken(String string) {
-		Map<String, Object> claims = new HashMap<>();
-		return Jwts.builder().setClaims(claims).setSubject(string).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
-	}
-
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		String emailId = getEmailIdFromToken(token);
-		Claims claims = Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
-		Boolean isTokenExpired = claims.getExpiration().before(new Date());
-		LOGGER.debug("Token is expired: {}", isTokenExpired);
-		return (emailId.equals(userDetails.getUsername()) && !isTokenExpired);
-	}
-
-	public String getEmailIdFromToken(String token) {
-		final Claims claims = Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
-		return claims.getSubject();
-	}
-
-}
-*/
 
 import java.security.Key;
 import java.util.Date;
@@ -74,7 +22,7 @@ public class JwtService {
 
 	public static final long JWT_TOKEN_VALIDITY = 1 * 60 * 60;
 
-	private static final String jwtSecret = "244226452948404D635166546A576D5A7134743777217A25432A462D4A614E64	";
+	private static final String jwtSecret = "244226452948404D635166546A576D5A7134743777217A25432A462D4A614E64";
 
 	private Key getSignKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
@@ -100,14 +48,6 @@ public class JwtService {
 		final Claims claims = Jwts.parserBuilder().setAllowedClockSkewSeconds(360).setSigningKey(getSignKey()).build()
 				.parseClaimsJws(token).getBody();
 		return claims.getSubject();
+
 	}
-	/*
-	 * public String getUsernameFromToken(String token) { try { JwtParser parser =
-	 * Jwts.parserBuilder() .setSigningKey(jwtSecret)
-	 * .setAllowedClockSkewSeconds(30) .build(); Claims claims =
-	 * parser.parseClaimsJws(token).getBody(); return claims.getSubject(); } catch
-	 * (ExpiredJwtException ex) { LOGGER.error("JWT token has expired: {}",
-	 * ex.getMessage()); return null; } catch (JwtException ex) {
-	 * LOGGER.error("Error parsing JWT token: {}", ex.getMessage()); return null; }
-	 */
 }

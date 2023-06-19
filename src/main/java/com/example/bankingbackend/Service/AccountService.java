@@ -35,6 +35,7 @@ public class AccountService {
 
 	public Accounts getAccWithAccNo(Long accountNo) {
 		Accounts accno = accountsRepository.findByAccountNo(accountNo);
+		//System.out.println(accno);
 		return accno;
 
 	}
