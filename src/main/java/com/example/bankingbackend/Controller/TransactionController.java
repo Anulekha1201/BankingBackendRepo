@@ -278,7 +278,8 @@ public class TransactionController {
 	}
 
 	@PutMapping("api/user/payCreditBill/{creditNo}/{bill}")
-	public boolean payCreditBill(@PathVariable Long creditNo, @PathVariable Long bill) {
+	public boolean payCreditBill(@PathVariable Long creditNo, @PathVariable Long bill) throws ResourceNotFoundException
+	{
 		    Credit c = creditService.getDetailsBycardNo(creditNo);
 
 		    long timestamp = System.currentTimeMillis();
@@ -306,7 +307,7 @@ public class TransactionController {
 				TransactionHistory t = new TransactionHistory(null, c.getAccountNo(), "Credit bill payment", bill, c.getCardNo(), "Failed", sqlDate);
 				transactionHistoryService.addTransactionHistory(t);
 				System.out.println("Payment Unsuccessful. Insufficient balance");
-				return false;
+				throw new ResourceNotFoundException("Insufficient Balance");
 			}
 
 
