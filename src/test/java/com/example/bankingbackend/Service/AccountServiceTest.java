@@ -30,14 +30,12 @@ class AccountServiceTest {
 
 	 Accounts accountsReq=getMockAccounts();
 	 Accounts accountsRes=getMockAccountsRes();
-     JobDetailsRequest jobDetailsRequest = getMockJobPostRequest();
-     JobDetails jobDetails = getMockJobDetails();
+     
 
 
 
 	 	Mockito.when(accountsRepository.save(Mockito.any(Accounts.class))).thenReturn(accountsRes);
 
-        Mockito.when(jobDetailsRepo.save(Mockito.any(JobDetails.class))).thenReturn(jobDetails);
 
         Accounts acc =  accountservice.addAccounts(accountsReq);
 
