@@ -49,7 +49,8 @@ public class SecurityConfig {
 						"/api/user/login/getDebitDetails/{accountNo}",
 						"/api/user/login/getCreditDetails/{accountNo}",
 						"/api/user/login/getLoanDetails/{cardNo}",
-						"api/user/support"
+						"api/user/support",
+						"api/admindashboard/**"
 //						"/api/user/transactions/deposit/{accountNo}/{amount}"
 						)
 
