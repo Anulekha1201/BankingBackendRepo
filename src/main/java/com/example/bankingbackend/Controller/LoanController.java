@@ -73,7 +73,7 @@ public class LoanController {
 		Long cardNo = loan.getCardNo();
 		System.out.println("cardNo: " + loan.getCardNo());
 		if (debitService.checkDebitExists(cardNo)) {
-			if (loanService.checkIfLoanExistsWithDebitCardNo(cardNo)) {
+			if (!loanService.checkIfLoanExistsWithDebitCardNo(cardNo)) {
 				System.out.println(loanService.checkIfLoanExistsWithDebitCardNo(cardNo));
 				System.out.println(debitService.checkDebitExists(cardNo)+"\ncardNo: "+cardNo);
 				System.out.println("cardNo: "+loan.getCardNo());
@@ -91,7 +91,8 @@ public class LoanController {
 				loanService.applyLoan(loan);
 				System.out.println("loan applied");
 				return true;
-			} else {
+			} 
+			else {
 				System.out.println("loan already exists with this cardNo");
 				//return false;
 				throw new BadRequestException("Loan already exists with this cardNo");

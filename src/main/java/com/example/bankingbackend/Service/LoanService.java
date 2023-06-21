@@ -27,24 +27,18 @@ public class LoanService {
 //			throw new ResourceNotFoundException("Loan is Not approved");
 //		}
 //    }
-	public boolean checkIfLoanExistsWithDebitCardNo(Long cardNo) throws ResourceNotFoundException {
+	public boolean checkIfLoanExistsWithDebitCardNo(Long cardNo){
 		if (loanRepository.findByCardNo(cardNo) == null) {
-			return true;
-		} else {
-			throw new ResourceNotFoundException("The loan doesn't exsists with this card number");
+			return false;
 		}
-
+		return true;
 	}
 
 	public Loans getLoanByLoanId(Long loanId)throws ResourceNotFoundException {
 		Loans l = loanRepository.findByLoanId(loanId);
-		if (l != null) {
+		if (l != null) 
 			return l;
-		} else {
-			throw new ResourceNotFoundException("Loan for loan id: "+loanId+" doesn't exists");
-			//return null;
-		}
-
+		return null;
 	}
 
 	@SuppressWarnings("null")
