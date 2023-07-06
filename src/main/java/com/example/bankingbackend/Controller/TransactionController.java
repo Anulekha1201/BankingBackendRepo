@@ -245,8 +245,13 @@ public class TransactionController {
 	public List<TransactionHistory> gettransactionHistory(@PathVariable Long accountNo) throws ResourceNotFoundException, ValidationException
 	{
 		List<TransactionHistory> th= transactionHistoryService.getTransactionHistoryForAcc(accountNo);
+		if(th != null) {
 		System.out.println("transaction history: "+th);
 		return th;
+		}
+		else {
+			throw new ResourceNotFoundException("Loan is not Approved");
+		}
 	}
 
 	@GetMapping("api/user/checkIfLoanExistsByLoanId/{loanId}")

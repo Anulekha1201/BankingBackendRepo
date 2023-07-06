@@ -89,7 +89,7 @@ public class AccountController {
 	@GetMapping("/api/user/login/getCreditDetails/{accountNo}")
     public Credit getCreditDetails(@PathVariable Long accountNo)  {
 		Credit credit = creditService.getCreditDetailsByAccNo(accountNo);
-		System.out.println("Credit Details: "+credit.getCardNo());
+//		System.out.println("Credit Details: "+credit.getCardNo());
 		return credit;
     }
 	

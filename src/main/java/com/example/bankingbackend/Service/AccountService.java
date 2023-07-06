@@ -56,6 +56,8 @@ public class AccountService {
 
 	public Accounts updateAccount(long id, Accounts account) {
 		Accounts acc = accountsRepository.findById(id).get();
+		acc.setFirstName(account.getFirstName());
+		acc.setLastName(account.getLastName());
 		acc.setEmailId(account.getEmailId());
 		acc.setMobileNumber(account.getMobileNumber());
 		acc.setAddress(account.getAddress());

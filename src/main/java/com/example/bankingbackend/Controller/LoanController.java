@@ -93,7 +93,7 @@ public class LoanController {
 				return true;
 			} 
 			else {
-				System.out.println("loan already exists with this cardNo");
+				System.out.println("Couldn't apply loan. Loan already exists with this cardNo");
 				//return false;
 				throw new BadRequestException("Loan already exists with this cardNo");
 			}

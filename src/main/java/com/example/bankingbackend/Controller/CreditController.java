@@ -106,13 +106,6 @@ public class CreditController {
 		//Credit cr = creditrepository.findByAccountNo(accountNo);
 //		System.out.println(accountNo+" "+cr);
 		if(cr == null) {
-//			Notifications n=new Notifications();
-//			n.setEmailId(credit.getEmailId());
-//			n.setCardNo(credit.getCardNo());
-//			n.setNotificationType("Credit Card");
-//			n.setStatus("Waiting for approval");
-//			notificationsService.saveAccounts(n);
-			
 			cs.addDetails(credit);
 			//creditrepository.save(credit);
 			return true;
@@ -196,17 +189,12 @@ public class CreditController {
 		if(credit == null) {
 			throw new BadRequestException("Please enter the correct credit card number");
 		}
-		else if(!credit.getCvv().equals(unblockcard.getCvv()) || credit.getPinNo().equals (unblockcard.getPinNo()))
+		else if(!(credit.getCvv().equals(unblockcard.getCvv()) || credit.getPinNo().equals (unblockcard.getPinNo())))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(!credit.getStatus().equals("Block")) {
-			throw new BadRequestException("Credit card with given card number is already blocked");
+		else if(credit.getStatus().equals("Active")) {
+			throw new BadRequestException("Credit card with given card number is already active.");
 		}
 		else {
-//			Notifications n=notificationsService.getnotificationsDetails(credit.getCardNo(),"Credit Card");
-//			
-//			n.setStatus("Active");
-//			notificationsService.saveAccounts(n);
-
 			credit.setStatus(unblockcard.getStatus());
 			cs.addDetails(credit);
 			//creditrepository.save(credit);

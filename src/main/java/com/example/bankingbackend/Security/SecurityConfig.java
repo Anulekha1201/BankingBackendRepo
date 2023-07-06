@@ -43,7 +43,9 @@ public class SecurityConfig {
 		LOGGER.info("Configuring security filter chain...");
 		return http.csrf().disable().authorizeHttpRequests()
 				.requestMatchers(
+						"/api/user/checkCustomerId/{customerId}",
 						"/api/user/register",
+						"/api/user/password",
 						"/api/user/login",
 						"/api/user/login/{emailId}",
 						"/api/user/login/getDebitDetails/{accountNo}",

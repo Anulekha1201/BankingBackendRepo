@@ -84,7 +84,7 @@ public class RegistrationController {
 	public boolean customeridinfo(@PathVariable String customerId) throws ResourceNotFoundException , ValidationException{
 		List<Accounts> custid=accountService.getAccountByCustomerId(customerId);
 		//List<Accounts> custid = accountsRepository.findByCustomerId(customerId);
-
+		
 		if (custid.isEmpty()) {
 			//return false;
 			throw new ResourceNotFoundException("Customer Id cannot be empty");
@@ -111,19 +111,36 @@ public class RegistrationController {
 	}
 
 	@PostMapping("/api/user/register")
-	public void registerUser(@RequestBody UserInfo userInfo) {
-//    public void registerUser(@RequestBody UserInfo userInfo) {
+	public void registerUser(@RequestBody UserInfo userInfo)throws ResourceNotFoundException  {
 		customeridref = userInfo.getCustomerId();
 		UserInfo user= userInfoService.getdetailsbycustid(customeridref);
-		//UserInfo user = userInfoRepository.findByCustomerId(customeridref);
+		List<Accounts> userAccount= accountService.getAccountByCustomerId(customeridref);
+
+		//first time user
 		if (user == null) {
-			userInfoService.addDetails(userInfo);
-			//userInfoRepository.save(userInfo);
-			String verificationLink = "http://localhost:3000/user/passwordset";
-			emailService.sendVerificationEmail(userInfo.getEmailId(), verificationLink);
-			System.out.println("Mail Send..");
-		} else {
-			System.out.println("Customer alrdy exists");
+			//check if all details are correct 
+			
+			if(userAccount.get(0).getCustomerId().equalsIgnoreCase(userInfo.getCustomerId()) && 
+				userAccount.get(0).getEmailId().equalsIgnoreCase(userInfo.getEmailId()) &&
+				userAccount.get(0).getFirstName().equalsIgnoreCase(userInfo.getFirstName()) &&
+				userAccount.get(0).getLastName().equalsIgnoreCase(userInfo.getLastName()) &&
+				userAccount.get(0).getMobileNumber().equals(userInfo.getMobileNumber())
+					) 
+			{
+				userInfoService.addDetails(userInfo);
+				//userInfoRepository.save(userInfo);
+				String verificationLink = "http://localhost:3000/user/passwordset";
+				emailService.sendVerificationEmail(userInfo.getEmailId(), verificationLink);
+				System.out.println("Mail Send..");
+			}
+			else
+			{
+				throw new ResourceNotFoundException("User not found with given details");
+			}
+		}
+		else {
+			System.out.println("Customer already exists");
+			throw new ResourceNotFoundException("Customer already exists.");
 		}
 	}
 

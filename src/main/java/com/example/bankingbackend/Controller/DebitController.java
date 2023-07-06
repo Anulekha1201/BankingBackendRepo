@@ -16,6 +16,7 @@ import com.example.bankingbackend.Entity.Debit;
 import com.example.bankingbackend.Entity.Notifications;
 import com.example.bankingbackend.Entity.setresetPin;
 import com.example.bankingbackend.Exception.BadRequestException;
+import com.example.bankingbackend.Exception.ResourceNotFoundException;
 import com.example.bankingbackend.Exception.ValidationException;
 import com.example.bankingbackend.Service.AccountService;
 import com.example.bankingbackend.Service.DebitService;
@@ -65,10 +66,11 @@ public class DebitController {
 		System.out.println(dh1);
 		return dh1;
 	}
+	
 	@PostMapping("/api/admindashboard/updatestatus")
 	public boolean updatestatustoapprove(@RequestBody Debit debit) {
 		Debit da =debitService.getDebitDetails(debit.getCardNo());
-		//Debit da = debitRepository.findByCardNo(cardNo);
+
 		System.out.println(debit.getCardNo() + " " + da.getStatus());
 		Notifications n=new Notifications();
 		n.setEmailId(debit.getEmailId());
@@ -76,19 +78,14 @@ public class DebitController {
 		n.setNotificationType("Debit Card");
 		n.setStatus("Approved");
 		notificationsService.saveAccounts(n);
-		
-//		Notifications n=notificationsService.getnotificationsDetails(da.getCardNo(),"Debit Card");
-//		
-//		n.setStatus("Approved");
-//		notificationsService.saveAccounts(n);
-		
 			da.setStatus("Approved");
 			debitService.addDetails(da);
 //			debitRepository.save(da);
 			return true;
 
 	}
-//	@PostMapping("/api/admindashboard/updatestatus/{cardNo}")
+
+	//	@PostMapping("/api/admindashboard/updatestatus/{cardNo}")
 //	public boolean updatestatustoapprove(@PathVariable Long cardNo) {
 //		Debit da =debitService.getDebitDetails(cardNo);
 //		//Debit da = debitRepository.findByCardNo(cardNo);
@@ -145,28 +142,16 @@ public class DebitController {
 		Debit debit=debitService.getDebitDetails(setpin.getCardNo());
 		//Debit debit = debitRepository.findByCardNo(setpin.getCardNo());
 		System.out.println(setpin.getPinNo() + "-" + debit.getStatus() + "-");
-//      if (debit== null) {
-//		return false;
-//      } 
-//      else {
-//		
-//      }
-		
-		if (debit == null || debit.getStatus().equals("Waiting for approval")){
+		if (debit == null ){
 			System.out.println(setpin.getPinNo() + " " + debit.getStatus());
 			//return false;
 			throw new ValidationException("Waiting for approval");
 		} else {
-//			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
-//			
-//			
-//			n.setStatus("Active");
-//			notificationsService.saveAccounts(n);
 			System.out.println(debit.getPinNo());
-			if(debit.getPinNo()==null) {
-				Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
-				notificationsService.deleteAccounts(n);
-			}
+//			if(debit.getPinNo()==null) {
+//				Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
+//				notificationsService.deleteAccounts(n);
+//			}
 			
 			debit.setPinNo(setpin.getPinNo());
 			debit.setStatus(setpin.getStatus());
@@ -181,13 +166,17 @@ public class DebitController {
 
 	// blocking a debitCard
 	@PostMapping("/api/user/blockcard")
-	public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) throws BadRequestException{
+	public boolean blockDebitCard(@RequestBody BlockorUnBlockCard blockcard) throws BadRequestException, ResourceNotFoundException{
 		Debit debit=debitService.getDebitDetails(blockcard.getCardNo());
 		//Debit debit = debitRepository.findByCardNo(blockcard.getCardNo());
 		System.out.println(blockcard.getCardNo());
 		if (debit == null) {
 			throw new BadRequestException("Debit card with given card number doesn't exists");
 		} 
+		if(!debit.getStatus().equals("Active"))
+		{
+			throw new ResourceNotFoundException("Please activate your debit card");
+		}
 		 if(!debit.getCvv().equals(blockcard.getCvv()) || !debit.getPinNo().equals(blockcard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
 		else if(!debit.getStatus().equals("Active")) {
@@ -212,20 +201,25 @@ public class DebitController {
 
 	@PostMapping("/api/user/Unblockcard")
 
-	public boolean UnblockDebitCard(@RequestBody BlockorUnBlockCard Unblockcard) throws BadRequestException{
+	public boolean UnblockDebitCard(@RequestBody BlockorUnBlockCard Unblockcard) throws BadRequestException, ResourceNotFoundException{
 		Debit debit=debitService.getDebitDetails(Unblockcard.getCardNo());
 		//Debit debit = debitRepository.findByCardNo(Unblockcard.getCardNo());
 		System.out.println(Unblockcard.getCardNo());
 
 		if (debit == null) {
 			//return false;
-			throw new BadRequestException("Debit card number must not be null please, Enter the correct Debit card number");
+			throw new BadRequestException("Debit card number must not be null please, enter the correct Debit card number");
 		}
+//		else if(!debit.getStatus().equals("Active"))
+//		{
+//			throw new ResourceNotFoundException("Please activate your debit card");
+//		}
+		else if(debit.getStatus().equals("Active")) {
+			throw new BadRequestException("Debit card with given card number is already Active");}
 		else if(!debit.getCvv().equals(Unblockcard.getCvv()) || !debit.getPinNo().equals(Unblockcard.getPinNo()))
 			throw new BadRequestException("Invalid Pin or CVV");
-		else if(!debit.getStatus().equals("Block")) {
-			throw new BadRequestException("Debit card with given card number is already Active");
-		}else {
+		
+		else {
 //			Notifications n=notificationsService.getnotificationsDetails(debit.getCardNo(),"Debit Card");
 //			
 //			n.setStatus("Active");
